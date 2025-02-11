@@ -1,4 +1,8 @@
-# AGI Moment
+import fs from "node:fs/promises";
+import path from "node:path";
+
+async function generateReadme() {
+  const readme = `# AGI Moment
 
 <p align="center">
   <img src="./src/assets/logo.png" alt="AGI Moment Logo" width="200" height="200">
@@ -54,3 +58,19 @@ We welcome contributions to this creative project! If you have any ideas or sugg
 <p align="center">
   用创意定义AGI的未来 | Defining the Future of AGI with Creativity
 </p>
+`;
+
+  await fs.writeFile(path.join(process.cwd(), "README.md"), readme, "utf-8");
+  console.log("✅ README.md 生成成功！");
+}
+
+async function main() {
+  try {
+    await generateReadme();
+  } catch (error) {
+    console.error("❌ 生成 README.md 时发生错误:", error);
+    process.exit(1);
+  }
+}
+
+main();

@@ -1,0 +1,121 @@
+name: SEO and Performance Monitoring
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天运行一次
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  monitoring:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Chrome
+        run: |
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install ./google-chrome-stable_current_amd64.deb
+
+      - name: Generate SEO report
+        run: pnpm monitor-seo
+        env:
+          NODE_ENV: production
+
+      - name: Analyze performance
+        run: pnpm analyze-performance
+        env:
+          NODE_ENV: production
+
+      - name: Submit sitemap
+        run: pnpm submit-sitemap
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          BING_API_KEY: ${{ secrets.BING_API_KEY }}
+          BAIDU_API_KEY: ${{ secrets.BAIDU_API_KEY }}
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoring-reports
+          path: |
+            reports/seo-report.json
+            reports/performance-report.json
+
+      - name: Create issue if scores are low
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // 读取SEO报告
+            const seoReport = JSON.parse(fs.readFileSync('reports/seo-report.json', 'utf8'));
+            const lowScoreSEOPages = seoReport.pages.filter(page => page.score < 80);
+            
+            // 读取性能报告
+            const perfReport = JSON.parse(fs.readFileSync('reports/performance-report.json', 'utf8'));
+            const lowScorePerfPages = perfReport.pages.filter(page => 
+              page.lighthouse.performance < 90 || 
+              page.lighthouse.accessibility < 90 || 
+              page.lighthouse.bestPractices < 90 || 
+              page.lighthouse.seo < 90
+            );
+            
+            if (lowScoreSEOPages.length > 0 || lowScorePerfPages.length > 0) {
+              let issueBody = `# 监控报告警告 🚨\n\n`;
+              
+              if (lowScoreSEOPages.length > 0) {
+                issueBody += `## SEO 评分过低的页面:\n\n`;
+                lowScoreSEOPages.forEach(page => {
+                  issueBody += `### ${page.url}\n`;
+                  issueBody += `- Score: ${page.score}/100\n`;
+                  issueBody += `- Title length: ${page.title.length} characters\n`;
+                  issueBody += `- Description length: ${page.description.length} characters\n`;
+                  issueBody += `- Load time: ${page.loadTime}ms\n`;
+                  issueBody += `- Word count: ${page.wordCount} words\n\n`;
+                });
+              }
+              
+              if (lowScorePerfPages.length > 0) {
+                issueBody += `## 性能评分过低的页面:\n\n`;
+                lowScorePerfPages.forEach(page => {
+                  issueBody += `### ${page.url}\n`;
+                  issueBody += `- Performance: ${page.lighthouse.performance.toFixed(1)}\n`;
+                  issueBody += `- Accessibility: ${page.lighthouse.accessibility.toFixed(1)}\n`;
+                  issueBody += `- Best Practices: ${page.lighthouse.bestPractices.toFixed(1)}\n`;
+                  issueBody += `- SEO: ${page.lighthouse.seo.toFixed(1)}\n`;
+                  issueBody += `- PWA: ${page.lighthouse.pwa.toFixed(1)}\n\n`;
+                  issueBody += `#### Web Vitals:\n`;
+                  issueBody += `- FCP: ${page.vitals.fcp.toFixed(1)}ms\n`;
+                  issueBody += `- LCP: ${page.vitals.lcp.toFixed(1)}ms\n`;
+                  issueBody += `- CLS: ${page.vitals.cls.toFixed(3)}\n`;
+                  issueBody += `- FID: ${page.vitals.fid.toFixed(1)}ms\n`;
+                  issueBody += `- TTFB: ${page.vitals.ttfb.toFixed(1)}ms\n\n`;
+                });
+              }
+              
+              issueBody += `\n请检查并改进这些页面。`;
+              
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🔍 SEO和性能监控警告',
+                body: issueBody,
+                labels: ['seo', 'performance', 'needs-attention']
+              });
+            } 
