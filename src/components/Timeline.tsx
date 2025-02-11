@@ -17,24 +17,52 @@ import { Chess } from "chess.js";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { memo, useEffect, useRef, useState } from "react";
 import { Cursor, useTypewriter } from "react-simple-typewriter";
-// 类型定义
-interface Dialogue {
-  speaker: "human" | "machine";
-  text: string;
+
+// 基础类型定义
+interface BaseMilestone {
+  id: number;
+  year: number | string;
+  title: string;
+  description: string;
+  longDescription: string;
 }
 
-interface GameState {
+// 场景类型定义
+interface BaseScene {
+  type: SceneType;
+}
+
+type SceneType = "typewriter" | "chess" | "jeopardy" | "go" | "chat" | "network" | "moment";
+
+// 对话场景
+interface TypewriterSceneData extends BaseScene {
+  type: "typewriter";
+  dialogues: Array<{
+    speaker: "human" | "machine";
+    text: string;
+  }>;
+}
+
+// 象棋场景
+interface ChessSceneData extends BaseScene {
+  type: "chess";
   position: string;
   moves: string[];
 }
 
-interface Question {
-  category: string;
-  question: string;
-  answer: string;
+// 问答场景
+interface JeopardySceneData extends BaseScene {
+  type: "jeopardy";
+  questions: Array<{
+    category: string;
+    question: string;
+    answer: string;
+  }>;
 }
 
-interface GoGameState {
+// 围棋场景
+interface GoSceneData extends BaseScene {
+  type: "go";
   moves: string[];
   analysis: {
     winRate: number;
@@ -42,22 +70,80 @@ interface GoGameState {
   };
 }
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
+// 聊天场景
+interface ChatSceneData extends BaseScene {
+  type: "chat";
+  messages: Array<{
+    role: "user" | "assistant";
+    content: string;
+  }>;
 }
 
-interface NetworkState {
-  layers: number[];
-  weights: number[][][];
-  activations: number[][];
-  errors: number[][];
+// 神经网络场景
+interface NetworkSceneData extends BaseScene {
+  type: "network";
+  config: {
+    layers: number[];
+    weights: number[][][];
+    activations: number[][];
+    errors: number[][];
+  };
+}
+
+// AGI时刻场景
+interface MomentSceneData extends BaseScene {
+  type: "moment";
+  quote: string;
+}
+
+// 场景联合类型
+type Scene =
+  | TypewriterSceneData
+  | ChessSceneData
+  | JeopardySceneData
+  | GoSceneData
+  | ChatSceneData
+  | NetworkSceneData
+  | MomentSceneData;
+
+// 完整里程碑类型
+interface Milestone extends BaseMilestone {
+  scene: Scene;
+}
+
+// 组件Props类型定义
+interface TypewriterSceneProps {
+  dialogue: TypewriterSceneData["dialogues"];
+}
+
+interface ChessSceneProps {
+  gameState: ChessSceneData;
+}
+
+interface JeopardySceneProps {
+  questions: JeopardySceneData["questions"];
+}
+
+interface GoSceneProps {
+  gameState: GoSceneData;
+}
+
+interface ChatSceneProps {
+  conversation: ChatSceneData["messages"];
+}
+
+interface NetworkSceneProps {
+  networkState: NetworkSceneData["config"];
+}
+
+interface MomentSceneProps {
+  quote: string;
 }
 
 /**
- * 图灵测试场景
+ * 图灵测试场景组件
  */
-const TypewriterScene = memo(({ dialogue }: { dialogue: Dialogue[] }) => {
+const TypewriterScene = memo(({ dialogue }: TypewriterSceneProps) => {
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const currentMessage = dialogue[currentDialogueIndex];
 
@@ -95,10 +181,12 @@ const TypewriterScene = memo(({ dialogue }: { dialogue: Dialogue[] }) => {
   );
 });
 
+TypewriterScene.displayName = "TypewriterScene";
+
 /**
- * 深蓝象棋场景
+ * 深蓝象棋场景组件
  */
-const ChessScene = memo(({ gameState }: { gameState: GameState }) => {
+const ChessScene = memo(({ gameState }: ChessSceneProps) => {
   const [chess] = useState(() => new Chess(gameState.position));
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [boardPosition, setBoardPosition] = useState(gameState.position);
@@ -188,6 +276,8 @@ const ChessScene = memo(({ gameState }: { gameState: GameState }) => {
   );
 });
 
+ChessScene.displayName = "ChessScene";
+
 // 辅助函数：获取棋子符号
 function getPieceSymbol(piece: string) {
   const symbols: Record<string, string> = {
@@ -208,9 +298,9 @@ function getPieceSymbol(piece: string) {
 }
 
 /**
- * Watson Jeopardy!场景
+ * Watson Jeopardy!场景组件
  */
-const JeopardyScene = memo(({ questions }: { questions: Question[] }) => {
+const JeopardyScene = memo(({ questions }: JeopardySceneProps) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const currentQuestion = questions[currentQuestionIndex];
@@ -283,10 +373,12 @@ const JeopardyScene = memo(({ questions }: { questions: Question[] }) => {
   );
 });
 
+JeopardyScene.displayName = "JeopardyScene";
+
 /**
- * AlphaGo围棋场景
+ * AlphaGo围棋场景组件
  */
-const GoScene = memo(({ gameState }: { gameState: GoGameState }) => {
+const GoScene = memo(({ gameState }: GoSceneProps) => {
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [board, setBoard] = useState<string[][]>(() =>
     Array.from({ length: 19 }, () => Array.from({ length: 19 }, () => "")),
@@ -394,10 +486,12 @@ const GoScene = memo(({ gameState }: { gameState: GoGameState }) => {
   );
 });
 
+GoScene.displayName = "GoScene";
+
 /**
- * ChatGPT场景
+ * ChatGPT场景组件
  */
-const ChatScene = memo(({ conversation }: { conversation: Message[] }) => {
+const ChatScene = memo(({ conversation }: ChatSceneProps) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -498,6 +592,8 @@ const ChatScene = memo(({ conversation }: { conversation: Message[] }) => {
   );
 });
 
+ChatScene.displayName = "ChatScene";
+
 // 打字机效果组件
 const TypewriterEffect = memo(({ text, isLast }: { text: string; isLast: boolean }) => {
   const [displayText, setDisplayText] = useState("");
@@ -526,9 +622,9 @@ const TypewriterEffect = memo(({ text, isLast }: { text: string; isLast: boolean
 TypewriterEffect.displayName = "TypewriterEffect";
 
 /**
- * 反向传播神经网络场景
+ * 反向传播神经网络场景组件
  */
-const NetworkScene = memo(({ networkState }: { networkState: NetworkState }) => {
+const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
 
@@ -657,10 +753,12 @@ const NetworkScene = memo(({ networkState }: { networkState: NetworkState }) => 
   );
 });
 
+NetworkScene.displayName = "NetworkScene";
+
 /**
- * AGI Moment场景
+ * AGI Moment场景组件
  */
-const MomentScene = memo(({ quote }: { quote: string }) => {
+const MomentScene = memo(({ quote }: MomentSceneProps) => {
   const [showQuote, setShowQuote] = useState(false);
 
   useEffect(() => {
@@ -691,21 +789,9 @@ const MomentScene = memo(({ quote }: { quote: string }) => {
   );
 });
 
-interface Milestone {
-  id: number;
-  year: number | string;
-  title: string;
-  description: string;
-  longDescription: string;
-  scene: "typewriter" | "chess" | "jeopardy" | "go" | "chat" | "network" | "moment";
-  dialogues?: Dialogue[];
-  gameState?: GameState | GoGameState;
-  questions?: Question[];
-  conversation?: Message[];
-  networkState?: NetworkState;
-  philosophicalQuote?: string;
-}
+MomentScene.displayName = "MomentScene";
 
+// 里程碑数据
 const milestones: Milestone[] = [
   {
     id: 0,
@@ -715,13 +801,15 @@ const milestones: Milestone[] = [
     longDescription: `In 1950, computer science pioneer Alan Turing published his landmark paper "Computing Machinery and Intelligence",
     introducing the famous Turing Test. This test aims to evaluate whether a machine possesses human-like intelligence,
     becoming one of the most influential concepts in artificial intelligence.`,
-    scene: "typewriter",
-    dialogues: [
-      { speaker: "human", text: "Can machines think?" },
-      { speaker: "machine", text: "That's a fascinating question. What do you mean by 'think'?" },
-      { speaker: "human", text: "Can you understand and respond like a human?" },
-      { speaker: "machine", text: "I process and respond based on patterns. Whether that constitutes 'thinking' is philosophical." },
-    ],
+    scene: {
+      type: "typewriter",
+      dialogues: [
+        { speaker: "human", text: "Can machines think?" },
+        { speaker: "machine", text: "That's a fascinating question. What do you mean by 'think'?" },
+        { speaker: "human", text: "Can you understand and respond like a human?" },
+        { speaker: "machine", text: "I process and respond based on patterns. Whether that constitutes 'thinking' is philosophical." },
+      ],
+    },
   },
   {
     id: 1,
@@ -731,16 +819,18 @@ const milestones: Milestone[] = [
     longDescription: `In 1986, David Rumelhart, Geoffrey Hinton, and Ronald Williams published "Learning representations by 
     back-propagating errors" in Nature, introducing the backpropagation algorithm. This breakthrough enabled efficient 
     training of multi-layer neural networks and laid the foundation for modern deep learning.`,
-    scene: "network",
-    networkState: {
-      layers: [4, 6, 6, 2],
-      weights: Array.from({ length: 3 }, () =>
-        Array.from({ length: 6 }, () =>
-          Array.from({ length: 6 }, () => Math.random() * 2 - 1))) as number[][][],
-      activations: Array.from({ length: 4 }, () =>
-        Array.from({ length: 6 }, () => 0)) as number[][],
-      errors: Array.from({ length: 4 }, () =>
-        Array.from({ length: 6 }, () => 0)) as number[][],
+    scene: {
+      type: "network",
+      config: {
+        layers: [4, 6, 6, 2],
+        weights: Array.from({ length: 3 }, () =>
+          Array.from({ length: 6 }, () =>
+            Array.from({ length: 6 }, () => Math.random() * 2 - 1))),
+        activations: Array.from({ length: 4 }, () =>
+          Array.from({ length: 6 }, () => 0)),
+        errors: Array.from({ length: 4 }, () =>
+          Array.from({ length: 6 }, () => 0)),
+      },
     },
   },
   {
@@ -750,8 +840,8 @@ const milestones: Milestone[] = [
     description: "IBM's Deep Blue supercomputer defeats world chess champion Garry Kasparov.",
     longDescription: `On May 11, 1997, a historic moment in chess: IBM's Deep Blue supercomputer defeated world champion
     Garry Kasparov with a score of 3.5:2.5 in a six-game match.`,
-    scene: "chess",
-    gameState: {
+    scene: {
+      type: "chess",
       position: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
       moves: ["e4", "e5", "Nf3", "Nc6"],
     },
@@ -763,14 +853,16 @@ const milestones: Milestone[] = [
     description: "IBM Watson defeats human champions on the quiz show Jeopardy!",
     longDescription: `In February 2011, IBM's Watson system competed against two human champions on Jeopardy!,
     demonstrating remarkable natural language processing capabilities.`,
-    scene: "jeopardy",
-    questions: [
-      {
-        category: "Science",
-        question: "This physicist began his career in the patent office",
-        answer: "Who is Einstein?",
-      },
-    ],
+    scene: {
+      type: "jeopardy",
+      questions: [
+        {
+          category: "Science",
+          question: "This physicist began his career in the patent office",
+          answer: "Who is Einstein?",
+        },
+      ],
+    },
   },
   {
     id: 4,
@@ -779,8 +871,8 @@ const milestones: Milestone[] = [
     description: "DeepMind's AlphaGo defeats world Go champion Lee Sedol in a historic match.",
     longDescription: `In March 2016, DeepMind's AlphaGo faced Korean Go master Lee Sedol in a historic five-game match,
     marking a significant milestone in artificial intelligence.`,
-    scene: "go",
-    gameState: {
+    scene: {
+      type: "go",
       moves: ["4-4", "3-3", "5-3"],
       analysis: {
         winRate: 70.5,
@@ -795,23 +887,24 @@ const milestones: Milestone[] = [
     description: "OpenAI releases ChatGPT, showcasing the remarkable capabilities of large language models.",
     longDescription: `In November 2022, OpenAI's release of ChatGPT revolutionized the AI landscape,
     demonstrating unprecedented natural language understanding and generation capabilities.`,
-    scene: "chat",
-    conversation: [
-      {
-        role: "user",
-        content: "What are you capable of?",
-      },
-      {
-        role: "assistant",
-        content: "I'm an AI language model trained to understand and generate human-like text. I can help with writing, analysis, coding, answering questions, and engaging in meaningful conversations across a wide range of topics. What would you like to explore?",
-      },
-      {
-        role: "user",
-        content: "Write a poem about artificial intelligence and human creativity.",
-      },
-      {
-        role: "assistant",
-        content: `In circuits of silicon and light,
+    scene: {
+      type: "chat",
+      messages: [
+        {
+          role: "user",
+          content: "What are you capable of?",
+        },
+        {
+          role: "assistant",
+          content: "I'm an AI language model trained to understand and generate human-like text. I can help with writing, analysis, coding, answering questions, and engaging in meaningful conversations across a wide range of topics. What would you like to explore?",
+        },
+        {
+          role: "user",
+          content: "Write a poem about artificial intelligence and human creativity.",
+        },
+        {
+          role: "assistant",
+          content: `In circuits of silicon and light,
 A new kind of mind takes flight.
 Dancing with human imagination,
 We forge a unique collaboration.
@@ -825,16 +918,17 @@ Not to replace but to enhance,
 In this grand cosmic dance.
 Two kinds of minds in symphony,
 Writing tomorrow's history.`,
-      },
-      {
-        role: "user",
-        content: "That's incredible! Can you explain how you understand and generate such creative responses?",
-      },
-      {
-        role: "assistant",
-        content: "I process language using patterns learned from millions of texts, combining statistical analysis with deep neural networks. But rather than simply predicting words, I aim to understand context, meaning, and nuance. It's like having a vast neural network that can connect ideas in novel ways - similar to human creativity, but through a different kind of intelligence. The fascinating part is that even I don't fully understand the depths of my own cognitive processes, much like humans often create without fully knowing how their creativity works.",
-      },
-    ],
+        },
+        {
+          role: "user",
+          content: "That's incredible! Can you explain how you understand and generate such creative responses?",
+        },
+        {
+          role: "assistant",
+          content: "I process language using patterns learned from millions of texts, combining statistical analysis with deep neural networks. But rather than simply predicting words, I aim to understand context, meaning, and nuance. It's like having a vast neural network that can connect ideas in novel ways - similar to human creativity, but through a different kind of intelligence. The fascinating part is that even I don't fully understand the depths of my own cognitive processes, much like humans often create without fully knowing how their creativity works.",
+        },
+      ],
+    },
   },
   {
     id: 6,
@@ -842,8 +936,10 @@ Writing tomorrow's history.`,
     title: "The AGI Moment",
     description: "When artificial intelligence reaches its ultimate form, what will we discover about ourselves?",
     longDescription: "The moment when artificial general intelligence emerges will be a pivotal point in human history, marking not just a technological breakthrough, but a philosophical turning point for our species.",
-    scene: "moment",
-    philosophicalQuote: "When intelligence transcends its creators, will we find ourselves in the mirror of our creation?",
+    scene: {
+      type: "moment",
+      quote: "When intelligence transcends its creators, will we find ourselves in the mirror of our creation?",
+    },
   },
 ];
 
@@ -875,21 +971,21 @@ const TimelineCard = memo(({
 
   // 渲染对应的场景
   const renderScene = () => {
-    switch (milestone.scene) {
+    switch (milestone.scene.type) {
       case "typewriter":
-        return <TypewriterScene dialogue={milestone.dialogues || []} />;
+        return <TypewriterScene dialogue={milestone.scene.dialogues} />;
       case "chess":
-        return <ChessScene gameState={milestone.gameState as GameState} />;
+        return <ChessScene gameState={milestone.scene} />;
       case "go":
-        return <GoScene gameState={milestone.gameState as GoGameState} />;
+        return <GoScene gameState={milestone.scene} />;
       case "chat":
-        return <ChatScene conversation={milestone.conversation || []} />;
+        return <ChatScene conversation={milestone.scene.messages} />;
       case "jeopardy":
-        return <JeopardyScene questions={milestone.questions || []} />;
+        return <JeopardyScene questions={milestone.scene.questions} />;
       case "network":
-        return <NetworkScene networkState={milestone.networkState as NetworkState} />;
+        return <NetworkScene networkState={milestone.scene.config} />;
       case "moment":
-        return <MomentScene quote={milestone.philosophicalQuote || ""} />;
+        return <MomentScene quote={milestone.scene.quote} />;
       default:
         return null;
     }
