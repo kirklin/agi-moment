@@ -2,7 +2,7 @@
 const nextConfig = {
   // 启用图片优化
   images: {
-    domains: ["agimoment.com"],
+    domains: ["agimoment.com", "source.unsplash.com", "images.unsplash.com"],
     formats: ["image/avif", "image/webp"],
   },
 
