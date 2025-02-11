@@ -1,0 +1,247 @@
+/*reset css*/
+@import "@kirklin/reset-css/kirklin.css";
+@unocss all;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+  --neon-cyan: rgba(0, 255, 255, 0.5);
+  --neon-purple: rgba(255, 0, 255, 0.5);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(var(--background-end-rgb))
+  )
+  rgb(var(--background-start-rgb));
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+::selection {
+  background-color: var(--neon-cyan);
+  color: #fff;
+  text-shadow: 0 0 8px var(--neon-cyan);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+  box-shadow: inset 0 0 6px rgba(0, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #00ffff20, #ff00ff20);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #00ffff40, #ff00ff40);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* 故障文字动画 */
+@keyframes glitch {
+  0% {
+    text-shadow: 0.05em 0 0 var(--neon-cyan), -0.05em -0.025em 0 var(--neon-purple);
+    transform: translate(0);
+  }
+  14% {
+    text-shadow: 0.05em 0 0 var(--neon-cyan), -0.05em -0.025em 0 var(--neon-purple);
+    transform: translate(0);
+  }
+  15% {
+    text-shadow: -0.05em -0.025em 0 var(--neon-cyan), 0.025em 0.025em 0 var(--neon-purple);
+    transform: translate(-0.025em, 0.025em);
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 var(--neon-cyan), 0.025em 0.025em 0 var(--neon-purple);
+    transform: translate(-0.025em, 0.025em);
+  }
+  50% {
+    text-shadow: 0.025em 0.05em 0 var(--neon-cyan), 0.05em 0 0 var(--neon-purple);
+    transform: translate(0.025em, 0);
+  }
+  99% {
+    text-shadow: 0.025em 0.05em 0 var(--neon-cyan), 0.05em 0 0 var(--neon-purple);
+    transform: translate(0.025em, 0);
+  }
+  100% {
+    text-shadow: -0.025em 0 0 var(--neon-cyan), -0.025em -0.025em 0 var(--neon-purple);
+    transform: translate(0);
+  }
+}
+
+.glitch-text {
+  animation: glitch 1s infinite linear alternate-reverse;
+}
+
+/* 霓虹文字效果 */
+.neon-text {
+  text-shadow: 0 0 10px var(--neon-cyan),
+               0 0 20px var(--neon-cyan),
+               0 0 30px var(--neon-cyan);
+}
+
+/* 扫描线效果 */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.scanline {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--neon-cyan),
+    transparent
+  );
+  opacity: 0.1;
+  animation: scanline 2s linear infinite;
+}
+
+/* 数字雨动画 */
+@keyframes digitalRain {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
+
+/* 浮动动画 */
+@keyframes float {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, -30px) rotate(120deg);
+  }
+  66% {
+    transform: translate(-30px, 30px) rotate(240deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+/* 光束动画 */
+@keyframes beam {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%) rotate(5deg);
+  }
+  20% {
+    opacity: 0.3;
+  }
+  80% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%) rotate(5deg);
+  }
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+/* 悬停效果 */
+@keyframes hover {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.hover-animation {
+  animation: hover 2s ease-in-out infinite;
+}
+
+/* 渐变边框动画 */
+@keyframes borderGlow {
+  0% {
+    border-image-source: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+  }
+  50% {
+    border-image-source: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+  }
+  100% {
+    border-image-source: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+  }
+}
+
+.gradient-border {
+  border: 1px solid;
+  border-image-slice: 1;
+  animation: borderGlow 2s linear infinite;
+}
+
+/* 模糊发光效果 */
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glow-effect:hover::before {
+  opacity: 1;
+}
