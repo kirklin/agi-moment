@@ -1,27 +1,73 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "~/utils/gsap";
 
+// 生成随机字符用于文字故障效果
 function generateRandomChar() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   return chars[Math.floor(Math.random() * chars.length)];
 }
 
+// 生成神经网络节点，每个节点包含随机位置和大小
+function generateNodes(count: number) {
+  return Array.from({ length: count }, () => ({
+    x: Math.random() * 100, // 随机x坐标(百分比)
+    y: Math.random() * 100, // 随机y坐标(百分比)
+    connections: [], // 存储连接关系
+    radius: Math.random() * 3 + 2, // 随机节点大小
+  }));
+}
+
+// 生成节点之间的连接，使用70%的概率创建连接
+function generateConnections(nodes: any[]) {
+  const connections: any[] = [];
+  nodes.forEach((node, i) => {
+    for (let j = i + 1; j < nodes.length; j++) {
+      if (Math.random() > 0.7) {
+        connections.push({
+          from: i,
+          to: j,
+          opacity: Math.random() * 0.3 + 0.1, // 随机连接线透明度
+        });
+      }
+    }
+  });
+  return connections;
+}
+
 export default function Hero() {
+  // Refs
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const animationsRef = useRef<gsap.core.Tween[]>([]);
+
+  // State
   const [glitchText, setGlitchText] = useState("AGI MOMENT");
   const [isClient, setIsClient] = useState(false);
+  const [nodes, setNodes] = useState<any[]>([]);
+  const [connections, setConnections] = useState<any[]>([]);
 
-  // 在客户端加载完成后设置标志
-  useEffect(() => {
+  // 初始化：在客户端加载完成后生成节点和连接
+  useLayoutEffect(() => {
     setIsClient(true);
+    const initialNodes = generateNodes(30);
+    const initialConnections = generateConnections(initialNodes);
+    setNodes(initialNodes);
+    setConnections(initialConnections);
   }, []);
 
-  // 故障文字效果
+  // 组件卸载时清理所有GSAP动画
+  useEffect(() => {
+    return () => {
+      animationsRef.current.forEach(animation => animation.kill());
+      animationsRef.current = [];
+    };
+  }, []);
+
+  // 文字故障效果：每3秒触发一次，持续约0.5秒
   useEffect(() => {
     if (!isClient) {
       return;
@@ -61,14 +107,19 @@ export default function Hero() {
     };
   }, [isClient]);
 
+  // GSAP动画效果
   useGSAP(() => {
-    if (!isClient) {
+    if (!isClient || nodes.length === 0) {
       return;
     }
 
+    // 清理之前的动画实例
+    animationsRef.current.forEach(animation => animation.kill());
+    animationsRef.current = [];
+
     const tl = gsap.timeline();
 
-    // 标题动画
+    // 标题和副标题的入场动画
     tl.from(titleRef.current, {
       y: 100,
       opacity: 0,
@@ -86,47 +137,27 @@ export default function Hero() {
         "-=0.5",
       );
 
-    // 高级粒子效果
-    const particles = gsap.utils.toArray<HTMLElement>(".particle");
-    particles.forEach((particle) => {
-      const randomX = Math.random() * 200 - 100;
-      const randomY = Math.random() * 200 - 100;
-
-      gsap.set(particle, {
-        x: randomX,
-        y: randomY,
-        scale: Math.random() * 1.5 + 0.5,
-      });
-
-      gsap.to(particle, {
-        x: `random(${-randomX}, ${randomX})`,
-        y: `random(${-randomY}, ${randomY})`,
-        rotation: "random(-720, 720)",
+    // 节点的持续浮动动画
+    nodes.forEach((_, i) => {
+      const animation = gsap.to(`#node-${i}`, {
+        y: "random(-20, 20)",
+        x: "random(-20, 20)",
         duration: "random(3, 6)",
         repeat: -1,
         yoyo: true,
         ease: "none",
       });
+      animationsRef.current.push(animation);
     });
 
-    // 网格动画
-    const gridLines = gsap.utils.toArray<HTMLElement>(".grid-line");
-    gridLines.forEach((line, index) => {
-      gsap.from(line, {
-        scaleX: 0,
-        duration: 1,
-        delay: index * 0.1,
-        ease: "power2.out",
-      });
-    });
-
-    // 鼠标移动视差效果
+    // 鼠标移动时的视差效果
     const onMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
       const { innerWidth, innerHeight } = window;
       const x = (clientX / innerWidth - 0.5) * 20;
       const y = (clientY / innerHeight - 0.5) * 20;
 
+      // 普通视差层
       gsap.to(".parallax", {
         x: -x,
         y: -y,
@@ -134,16 +165,10 @@ export default function Hero() {
         ease: "power2.out",
       });
 
+      // 慢速视差层
       gsap.to(".parallax-slow", {
         x: -x * 0.5,
         y: -y * 0.5,
-        duration: 1,
-        ease: "power2.out",
-      });
-
-      gsap.to(".parallax-fast", {
-        x: -x * 2,
-        y: -y * 2,
         duration: 1,
         ease: "power2.out",
       });
@@ -151,200 +176,123 @@ export default function Hero() {
 
     window.addEventListener("mousemove", onMouseMove);
     return () => window.removeEventListener("mousemove", onMouseMove);
-  }, { scope: containerRef, dependencies: [isClient] });
+  }, { scope: containerRef, dependencies: [isClient, nodes] });
 
-  // 生成静态位置的粒子数据
-  const particlesData = Array.from({ length: 50 }, (_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 100}%`,
-    color: `rgba(${Math.random() * 255}, ${Math.random() * 255}, 255, 0.3)`,
-  }));
+  // 服务器端渲染时的基础内容
+  if (!isClient) {
+    return (
+      <div ref={containerRef} className="relative min-h-screen w-full overflow-hidden bg-black">
+        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
+          <h1
+            ref={titleRef}
+            className="mb-6 text-center text-6xl font-bold tracking-wider text-white/90 md:text-8xl"
+          >
+            AGI MOMENT
+          </h1>
+          <p
+            ref={subtitleRef}
+            className="text-center text-lg text-white/70 md:text-xl"
+          >
+            Exploring the Future of Artificial General Intelligence
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className="relative min-h-screen w-full overflow-hidden bg-black">
-      {/* 动态背景 */}
+      {/* 渐变背景效果 */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,255,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,255,0.03),transparent_70%)]" />
           <div
-            className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,0,255,0.1),transparent_50%)]"
+            className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,0,255,0.03),transparent_70%)]"
             style={{ transform: "scale(1.2)" }}
           />
         </div>
       </div>
 
-      {/* 能量网格 */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent_0%,rgba(0,255,255,0.1)_50%,transparent_100%)] animate-[pulse_4s_ease-in-out_infinite]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,0,255,0.1)_50%,transparent_100%)] animate-[pulse_4s_ease-in-out_infinite]" />
-      </div>
-
-      {/* 背景网格 */}
-      <div className="absolute inset-0 opacity-20">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={`grid-${i}`}
-            className="grid-line absolute h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
-            style={{ top: `${(i + 1) * 5}%` }}
-          />
-        ))}
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={`grid-v-${i}`}
-            className="grid-line absolute h-full w-px bg-gradient-to-b from-transparent via-purple-500 to-transparent"
-            style={{ left: `${(i + 1) * 5}%` }}
-          />
-        ))}
-      </div>
-
-      {/* 浮动几何体 */}
-      {isClient && (
-        <div className="absolute inset-0 overflow-hidden">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={`geometric-${i}`}
-              className="absolute opacity-20"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                transform: `rotate(${Math.random() * 360}deg) scale(${Math.random() * 0.5 + 0.5})`,
-                animation: `float ${Math.random() * 10 + 10}s ease-in-out infinite`,
-              }}
-            >
-              <div
-                className="h-20 w-20 border border-cyan-500/30 backdrop-blur-sm"
-                style={{
-                  clipPath: i % 2 === 0
-                    ? "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)"
-                    : "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-                }}
+      {/* 神经网络可视化 */}
+      {nodes.length > 0 && (
+        <div className="absolute inset-0 parallax-slow">
+          <svg className="h-full w-full opacity-15">
+            {/* 节点之间的连接线 */}
+            {connections.map((conn, i) => (
+              <line
+                key={`conn-${i}`}
+                x1={`${nodes[conn.from].x}%`}
+                y1={`${nodes[conn.from].y}%`}
+                x2={`${nodes[conn.to].x}%`}
+                y2={`${nodes[conn.to].y}%`}
+                stroke="url(#gradient-line)"
+                strokeWidth="0.3"
+                opacity={conn.opacity}
               />
-            </div>
-          ))}
+            ))}
+            {/* 神经网络节点 */}
+            {nodes.map((node, i) => (
+              <circle
+                key={`node-${i}`}
+                id={`node-${i}`}
+                cx={`${node.x}%`}
+                cy={`${node.y}%`}
+                r={node.radius * 0.8}
+                fill="url(#gradient-dot)"
+                className="animate-pulse"
+              />
+            ))}
+            {/* 渐变定义 */}
+            <defs>
+              <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="rgba(0, 255, 255, 0.2)" />
+                <stop offset="100%" stopColor="rgba(255, 0, 255, 0.2)" />
+              </linearGradient>
+              <radialGradient id="gradient-dot">
+                <stop offset="0%" stopColor="rgba(255, 255, 255, 0.6)" />
+                <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
+              </radialGradient>
+            </defs>
+          </svg>
         </div>
       )}
 
-      {/* 光束效果 */}
-      {isClient && (
-        <div className="absolute inset-0 overflow-hidden opacity-10">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div
-              key={`beam-${i}`}
-              className="absolute h-[200vh] w-px bg-gradient-to-b from-transparent via-cyan-500 to-transparent"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: "-50%",
-                transform: `rotate(${Math.random() * 20 - 10}deg)`,
-                animation: `beam ${Math.random() * 5 + 5}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 5}s`,
-              }}
-            />
-          ))}
-        </div>
-      )}
+      {/* 模糊玻璃效果 */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 backdrop-blur-[120px] backdrop-filter" />
+      </div>
 
-      {/* 背景粒子 */}
-      <div className="parallax-slow">
-        {isClient && particlesData.map(particle => (
+      {/* 主要内容区域 */}
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
+        <h1
+          ref={titleRef}
+          className="glitch-text mb-6 text-center text-6xl font-bold tracking-wider text-white/90 md:text-8xl"
+        >
+          {glitchText}
+        </h1>
+        <p
+          ref={subtitleRef}
+          className="text-center text-lg text-white/70 md:text-xl"
+        >
+          Exploring the Future of Artificial General Intelligence
+        </p>
+      </div>
+
+      {/* 光束装饰效果 */}
+      <div className="absolute inset-0 overflow-hidden opacity-5">
+        {Array.from({ length: 3 }).map((_, i) => (
           <div
-            key={`particle-${particle.id}`}
-            className="particle absolute h-1 w-1 rounded-full"
+            key={`beam-${i}`}
+            className="absolute h-[200vh] w-px bg-gradient-to-b from-transparent via-white to-transparent"
             style={{
-              left: particle.left,
-              top: particle.top,
-              background: particle.color,
-              filter: "blur(1px)",
+              left: `${Math.random() * 100}%`,
+              top: "-50%",
+              transform: `rotate(${Math.random() * 20 - 10}deg)`,
+              animation: `beam ${Math.random() * 5 + 5}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 5}s`,
             }}
           />
         ))}
-      </div>
-
-      {/* 数字雨效果 */}
-      {isClient && (
-        <div className="parallax absolute inset-0 overflow-hidden opacity-20">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div
-              key={`rain-${i}`}
-              className="absolute top-0 text-xs font-light text-cyan-500"
-              style={{
-                left: `${(i + 1) * 5}%`,
-                animation: `digitalRain ${Math.random() * 5 + 5}s linear infinite`,
-                animationDelay: `${Math.random() * 5}s`,
-              }}
-            >
-              {Array.from({ length: 20 }).map((_, j) => (
-                <div
-                  key={j}
-                  style={{
-                    opacity: 1 - j * 0.1,
-                    transform: `translateY(${j * 20}px)`,
-                  }}
-                >
-                  {Math.random() > 0.5 ? "1" : "0"}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 text-center">
-        {/* 故障效果标题 */}
-        <div className="parallax relative">
-          <h1
-            ref={titleRef}
-            className="glitch-text relative text-6xl font-bold md:text-8xl"
-            style={{
-              textShadow: "2px 2px 20px rgba(0, 255, 255, 0.5), -2px -2px 20px rgba(255, 0, 255, 0.5)",
-            }}
-          >
-            <span className="relative z-10 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              {glitchText}
-            </span>
-            <span className="absolute left-0 top-0 z-0 translate-x-[-5px] translate-y-[-5px] bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text opacity-50 blur-sm">
-              {glitchText}
-            </span>
-            <span className="absolute left-0 top-0 z-0 translate-x-[5px] translate-y-[5px] bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text opacity-50 blur-sm">
-              {glitchText}
-            </span>
-          </h1>
-        </div>
-
-        {/* 副标题 */}
-        <div className="parallax-slow">
-          <p
-            ref={subtitleRef}
-            className="mt-8 max-w-2xl text-lg font-light leading-relaxed text-cyan-200/80 md:text-xl"
-            style={{
-              textShadow: "0 0 10px rgba(0, 255, 255, 0.5)",
-            }}
-          >
-            2025，人工智能已经开启了新纪元。
-            <br />
-            在这里，我们将见证人类智慧与机器意识的完美融合，
-            <br />
-            共同探索超越人类极限的无尽可能。
-          </p>
-        </div>
-
-        {/* 交互按钮 */}
-        <div className="parallax-fast mt-12">
-          <button
-            className="group relative overflow-hidden rounded-lg bg-transparent px-8 py-3 transition-all hover:scale-105"
-          >
-            <span className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 backdrop-blur-sm" />
-            <span className="absolute inset-0 opacity-50">
-              <span className="absolute inset-x-0 top-0 h-px animate-[glow_1.5s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-              <span className="absolute inset-x-0 bottom-0 h-px animate-[glow_1.5s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-              <span className="absolute inset-y-0 left-0 w-px animate-[glow_1.5s_ease-in-out_infinite] bg-gradient-to-b from-transparent via-cyan-500 to-transparent" />
-              <span className="absolute inset-y-0 right-0 w-px animate-[glow_1.5s_ease-in-out_infinite] bg-gradient-to-b from-transparent via-purple-500 to-transparent" />
-            </span>
-            <span className="relative z-10 text-lg font-light text-cyan-300 transition-colors group-hover:text-cyan-200">
-              ENTER THE FUTURE
-            </span>
-          </button>
-        </div>
       </div>
     </div>
   );

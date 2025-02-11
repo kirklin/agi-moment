@@ -16,12 +16,12 @@ export default function Navbar() {
       ease: "power3.out",
     });
 
-    // 添加霓虹灯效果动画
-    const neonElements = gsap.utils.toArray<HTMLElement>(".neon-text");
-    neonElements.forEach((element) => {
+    // 添加微妙的光晕效果
+    const glowElements = gsap.utils.toArray<HTMLElement>(".nav-glow");
+    glowElements.forEach((element) => {
       gsap.to(element, {
-        textShadow: "0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.5)",
-        duration: 1,
+        filter: "brightness(1.2)",
+        duration: 2,
         repeat: -1,
         yoyo: true,
         ease: "power1.inOut",
@@ -32,42 +32,33 @@ export default function Navbar() {
   return (
     <nav
       ref={navRef}
-      className="fixed left-0 right-0 top-0 z-50 backdrop-blur-md"
+      className="fixed left-0 right-0 top-0 z-50 backdrop-blur-sm"
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between p-5">
         <Link
           href="/"
-          className="neon-text group relative text-xl font-bold text-cyan-300 transition-all hover:text-cyan-200"
-          style={{
-            textShadow: "0 0 10px rgba(0, 255, 255, 0.5)",
-          }}
+          className="nav-glow relative text-xl font-bold text-white/90 transition-all duration-300 hover:text-cyan-300"
         >
           <span className="relative z-10">AGI MOMENT</span>
-          <span className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-300 group-hover:w-full" />
         </Link>
 
         <div className="flex items-center gap-8">
           <Link
             href="/about"
-            className="group relative text-gray-300 transition-all hover:text-cyan-300"
+            className="relative overflow-hidden text-white/70 transition-all duration-300 hover:text-cyan-300"
           >
             <span className="relative z-10">关于</span>
-            <span className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-300 group-hover:w-full" />
           </Link>
           <a
             href="https://github.com/kirklin"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative text-gray-300 transition-all hover:text-cyan-300"
+            className="relative overflow-hidden text-white/70 transition-all duration-300 hover:text-cyan-300"
           >
             <span className="relative z-10">GitHub</span>
-            <span className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-300 group-hover:w-full" />
           </a>
         </div>
       </div>
-
-      {/* 装饰性的网格线 */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
     </nav>
   );
 }

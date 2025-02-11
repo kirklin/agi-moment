@@ -8,6 +8,7 @@
   --background-end-rgb: 0, 0, 0;
   --neon-cyan: rgba(0, 255, 255, 0.5);
   --neon-purple: rgba(255, 0, 255, 0.5);
+  --neural-glow: rgba(255, 255, 255, 0.05);
 }
 
 html {
@@ -17,11 +18,10 @@ html {
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
-    to bottom,
-    transparent,
+    125deg,
+    rgb(var(--background-start-rgb)),
     rgb(var(--background-end-rgb))
-  )
-  rgb(var(--background-start-rgb));
+  );
   min-height: 100vh;
   overflow-x: hidden;
   cursor: none;
@@ -39,18 +39,18 @@ body {
 
 ::-webkit-scrollbar-track {
   background: #000;
-  box-shadow: inset 0 0 6px rgba(0, 255, 255, 0.1);
+  box-shadow: inset 0 0 6px var(--neural-glow);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #00ffff20, #ff00ff20);
+  background: linear-gradient(to bottom, #00ffff10, #ff00ff10);
   border-radius: 4px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #00ffff40, #ff00ff40);
+  background: linear-gradient(to bottom, #00ffff20, #ff00ff20);
   border: 2px solid transparent;
   background-clip: padding-box;
 }
@@ -58,11 +58,11 @@ body {
 /* 故障文字动画 */
 @keyframes glitch {
   0% {
-    text-shadow: 0.05em 0 0 var(--neon-cyan), -0.05em -0.025em 0 var(--neon-purple);
+    text-shadow: 0.05em 0 0 var(--neon-cyan), -0.025em -0.025em 0 var(--neon-purple);
     transform: translate(0);
   }
   14% {
-    text-shadow: 0.05em 0 0 var(--neon-cyan), -0.05em -0.025em 0 var(--neon-purple);
+    text-shadow: 0.05em 0 0 var(--neon-cyan), -0.025em -0.025em 0 var(--neon-purple);
     transform: translate(0);
   }
   15% {
@@ -96,6 +96,112 @@ body {
   text-shadow: 0 0 10px var(--neon-cyan),
                0 0 20px var(--neon-cyan),
                0 0 30px var(--neon-cyan);
+}
+
+/* 神经元脉冲动画 */
+@keyframes neuralPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 连接线动画 */
+@keyframes connectionFlow {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0.1;
+  }
+}
+
+/* 光束动画 */
+@keyframes beam {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%) rotate(5deg);
+  }
+  20% {
+    opacity: 0.2;
+  }
+  80% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%) rotate(5deg);
+  }
+}
+
+/* 模糊发光效果 */
+.neural-glow {
+  position: relative;
+}
+
+.neural-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+  filter: blur(15px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.neural-glow:hover::before {
+  opacity: 0.5;
+}
+
+/* 智能体动画 */
+@keyframes intelligence {
+  0% {
+    filter: brightness(1) blur(0px);
+  }
+  50% {
+    filter: brightness(1.2) blur(2px);
+  }
+  100% {
+    filter: brightness(1) blur(0px);
+  }
+}
+
+.intelligence-animation {
+  animation: intelligence 4s ease-in-out infinite;
+}
+
+/* 玻璃态效果 */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* 渐变文字 */
+.gradient-text {
+  background: linear-gradient(
+    to right,
+    #00ffff,
+    #ff00ff
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: intelligence 4s ease-in-out infinite;
 }
 
 /* 扫描线效果 */
@@ -161,24 +267,6 @@ body {
   }
 }
 
-/* 光束动画 */
-@keyframes beam {
-  0% {
-    opacity: 0;
-    transform: translateY(-100%) rotate(5deg);
-  }
-  20% {
-    opacity: 0.3;
-  }
-  80% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(100%) rotate(5deg);
-  }
-}
-
 @keyframes glow {
   0% {
     opacity: 0.5;
@@ -225,23 +313,4 @@ body {
   border: 1px solid;
   border-image-slice: 1;
   animation: borderGlow 2s linear infinite;
-}
-
-/* 模糊发光效果 */
-.glow-effect {
-  position: relative;
-}
-
-.glow-effect::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
-  filter: blur(10px);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.glow-effect:hover::before {
-  opacity: 1;
 }
