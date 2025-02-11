@@ -15,6 +15,7 @@
     "submit-sitemap": "tsx scripts/submit-sitemap.ts",
     "monitor-seo": "tsx scripts/monitor-seo.ts",
     "create-logo": "tsx scripts/create-placeholder-logo.ts",
+    "analyze-performance": "tsx scripts/analyze-performance.ts",
     "prepare": "pnpm create-logo && pnpm generate-images && pnpm generate-readme"
   },
   "dependencies": {
