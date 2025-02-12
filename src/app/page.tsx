@@ -1,7 +1,7 @@
 import Footer from "~/components/Footer";
 import Hero from "~/components/Hero";
 import Navbar from "~/components/Navbar";
-import Timeline from "~/components/Timeline";
+import Timeline from "~/components/Timeline/index";
 
 export default function Home() {
   return (
