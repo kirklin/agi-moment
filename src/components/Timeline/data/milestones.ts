@@ -47,11 +47,17 @@ export const milestones: Milestone[] = [
     title: "Deep Blue Defeats Kasparov",
     description: "IBM's Deep Blue supercomputer defeats world chess champion Garry Kasparov.",
     longDescription: `On May 11, 1997, a historic moment in chess: IBM's Deep Blue supercomputer defeated world champion
-    Garry Kasparov with a score of 3.5:2.5 in a six-game match.`,
+    Garry Kasparov with a score of 3.5:2.5 in a six-game match. In the decisive Game 6, Kasparov chose the Caro-Kann Defense,
+    but Deep Blue demonstrated remarkable tactical insight by sacrificing material for a powerful attack. This historic victory
+    marked the first time a computer defeated a world champion in a full match under standard chess tournament conditions.
+    Kasparov had won the first game, but resigned a drawn position in the second game. Despite trying with all his might
+    to win the match, in the final game his choice of the Caro-Kann Defence proved fatal as Deep Blue found a brilliant
+    sacrifice that led to victory.`,
     scene: {
       type: "chess",
       position: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-      moves: ["e4", "e5", "Nf3", "Nc6"],
+      moves: ["e4", "c6", "d4", "d5", "Nc3", "dxe4", "Nxe4", "Nd7", "Ng5", "Ngf6", "Bd3", "e6", "N1f3", "h6", "Nxe6"],
+      // moves: ["e4", "c6", "d4", "d5", "Nc3", "dxe4", "Nxe4", "Nd7", "Ng5", "Ngf6", "Bd3", "e6", "N1f3", "h6", "Nxe6", "Qe7", "O-O", "fxe6", "Bg6+", "Kd8", "Bf4", "b5", "a4", "Bb7", "Re1", "Nd5", "Bg3", "Kc8", "axb5", "cxb5", "Qd3", "Bc6", "Bf5", "exf5", "Rxe7", "Bxe7", "c4"],
     },
   },
   {
