@@ -1,6 +1,6 @@
-import React from "react";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "About - AGI Moment",
   description: "About AGI Moment - Exploring the future of artificial general intelligence",
 };
