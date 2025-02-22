@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageSEO } from "~/components/SEO";
 
 // 多语言内容
 const content = {
@@ -16,30 +17,7 @@ const content = {
     intro: "AGI时刻致力于探索和推进通用人工智能领域的发展。",
     mission: "我们的使命是为安全且有益的AGI系统的发展做出贡献，以帮助解决人类最紧迫的挑战。",
   },
-};
-
-// 生成页面元数据
-export async function generateMetadata({ params: { lang } }: { params: { lang: "en" | "zh" } }): Promise<Metadata> {
-  const t = content[lang];
-
-  return {
-    title: t.title,
-    description: t.description,
-    openGraph: {
-      title: t.title,
-      description: t.description,
-      type: "article",
-      publishedTime: "2024-02-11T00:00:00.000Z",
-      authors: ["Kirk Lin"],
-      url: `https://agimoment.com/${lang}/about`,
-    },
-    twitter: {
-      card: "summary",
-      title: t.title,
-      description: t.description,
-    },
-  };
-}
+} as const;
 
 // JSON-LD结构化数据
 const aboutJsonLd = {
@@ -61,9 +39,18 @@ export default function AboutPage({ params: { lang } }: { params: { lang: "en" |
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+      <PageSEO
+        config={{
+          title: t.title,
+          description: t.description,
+          openGraph: {
+            title: t.title,
+            description: t.description,
+            type: "article",
+            url: `https://agimoment.com/${lang}/about`,
+          },
+        }}
+        jsonLd={aboutJsonLd}
       />
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm">

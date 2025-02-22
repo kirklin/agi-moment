@@ -24,4 +24,10 @@ Crawl-delay: 5
 
 User-agent: Baiduspider
 Allow: /
-Crawl-delay: 5 
+Crawl-delay: 5
+
+# Host
+Host: https://agimoment.com
+
+# Sitemaps
+Sitemap: https://agimoment.com/sitemap.xml

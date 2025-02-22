@@ -30,6 +30,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // 跳过所有内部路径(_next)和API路由
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
   ],
 };

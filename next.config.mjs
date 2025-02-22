@@ -16,7 +16,6 @@ const nextConfig = {
 
   // 资源优化
   optimizeFonts: true,
-  optimizeImages: true,
 
   // 安全配置
   headers: async () => [

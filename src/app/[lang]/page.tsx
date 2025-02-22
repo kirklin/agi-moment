@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Hero from "~/components/Hero";
+import { PageSEO } from "~/components/SEO";
 import Timeline from "~/components/Timeline";
 
 // 多语言内容
@@ -12,28 +13,7 @@ const content = {
     title: "AGI时刻 - 探索通用人工智能的未来",
     description: "探索通向通用人工智能(AGI)的旅程。了解AGI发展中的关键里程碑、突破性进展和未来可能性。",
   },
-};
-
-// 生成页面元数据
-export async function generateMetadata({ params: { lang } }: { params: { lang: "en" | "zh" } }): Promise<Metadata> {
-  const t = content[lang];
-
-  return {
-    title: t.title,
-    description: t.description,
-    openGraph: {
-      title: t.title,
-      description: t.description,
-      type: "website",
-      url: `https://agimoment.com/${lang}`,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: t.title,
-      description: t.description,
-    },
-  };
-}
+} as const;
 
 // JSON-LD结构化数据
 const homeJsonLd = {
@@ -56,11 +36,21 @@ const homeJsonLd = {
 };
 
 export default function Home({ params: { lang } }: { params: { lang: "en" | "zh" } }) {
+  const t = content[lang];
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
+      <PageSEO
+        config={{
+          title: t.title,
+          description: t.description,
+          openGraph: {
+            title: t.title,
+            description: t.description,
+            url: `https://agimoment.com/${lang}`,
+          },
+        }}
+        jsonLd={homeJsonLd}
       />
       <div className="flex flex-col">
         <Hero />
