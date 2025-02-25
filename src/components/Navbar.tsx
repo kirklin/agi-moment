@@ -6,10 +6,10 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "~/utils/gsap";
 
-// 导航项配置
+// Navigation items configuration
 const navItems = [
-  { href: "/", label: "首页" },
-  { href: "/about", label: "关于" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
   { href: "https://github.com/kirklin", label: "GitHub", external: true },
 ];
 
@@ -18,7 +18,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // 监听滚动
+  // Monitor scrolling
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -28,7 +28,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 入场动画
+  // Entrance animation
   useGSAP(() => {
     gsap.from(navRef.current, {
       y: -100,
@@ -37,7 +37,7 @@ export default function Navbar() {
       ease: "power3.out",
     });
 
-    // 导航项发光效果
+    // Navigation item glow effect
     const glowElements = gsap.utils.toArray<HTMLElement>(".nav-glow");
     glowElements.forEach((element) => {
       gsap.to(element, {
@@ -66,7 +66,7 @@ export default function Navbar() {
           <span className="relative z-10">AGI MOMENT</span>
         </Link>
 
-        {/* 桌面端导航 */}
+        {/* Desktop navigation */}
         <div className="hidden items-center gap-8 md:flex">
           {navItems.map(item => (
             item.external
@@ -93,7 +93,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* 移动端菜单按钮 */}
+        {/* Mobile menu button */}
         <button
           className="relative z-50 md:hidden"
           onClick={() => setIsOpen(!isOpen)}
@@ -115,7 +115,7 @@ export default function Navbar() {
           </div>
         </button>
 
-        {/* 移动端菜单 */}
+        {/* Mobile menu */}
         <motion.div
           className="fixed bottom-0 left-0 right-0 top-0 z-40 flex items-center justify-center bg-black/95 backdrop-blur-lg md:hidden"
           initial={{ opacity: 0, x: "100%" }}

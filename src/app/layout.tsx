@@ -11,25 +11,17 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://agimoment.com"),
-  title: "AGI Moment - 想象AGI的无限可能 | Imagine the Infinite Possibilities of AGI",
-  description: "AGI Moment是一场视觉盛宴，通过艺术与科技的完美融合，展现人类对AGI的无限想象。在这里，每一刻都是人类创意与人工智能碰撞的瞬间，让我们一同期待AGI带来的奇妙未来。| AGI Moment is a visual feast that showcases humanity's infinite imagination of AGI through the perfect fusion of art and technology. Here, every moment is an instant of collision between human creativity and artificial intelligence.",
+  title: "AGI Moment - Imagine the Infinite Possibilities of AGI",
+  description: "AGI Moment is a visual feast that showcases humanity's infinite imagination of AGI through the perfect fusion of art and technology. Here, every moment is an instant of collision between human creativity and artificial intelligence.",
   keywords: [
     "AGI",
-    "人工通用智能",
     "Artificial General Intelligence",
-    "创意",
     "Creativity",
-    "艺术",
     "Art",
-    "未来",
     "Future",
-    "想象力",
     "Imagination",
-    "科技艺术",
     "Tech Art",
-    "数字艺术",
     "Digital Art",
-    "未来主义",
     "Futurism",
     "Kirk Lin",
   ],
@@ -49,8 +41,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "AGI Moment - 想象AGI的无限可能 | Imagine the Infinite Possibilities of AGI",
-    description: "AGI Moment是一场视觉盛宴，通过艺术与科技的完美融合，展现人类对AGI的无限想象。在这里，每一刻都是人类创意与人工智能碰撞的瞬间。",
+    title: "AGI Moment - Imagine the Infinite Possibilities of AGI",
+    description: "AGI Moment is a visual feast that showcases humanity's infinite imagination of AGI through the perfect fusion of art and technology. Here, every moment is an instant of collision between human creativity and artificial intelligence.",
     url: "https://agimoment.com",
     siteName: "AGI Moment",
     images: [
@@ -61,7 +53,7 @@ export const metadata: Metadata = {
         alt: "AGI Moment - Exploring the Future of AGI",
       },
     ],
-    locale: "zh_CN",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
@@ -93,7 +85,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <head>
         <link rel="alternate" hrefLang="en" href="https://agimoment.com/en" />
         <link rel="alternate" hrefLang="zh" href="https://agimoment.com/zh" />
@@ -112,7 +104,7 @@ export default function RootLayout({
                 "name": "Kirk Lin",
                 "url": "https://github.com/kirklin",
               },
-              "description": "AGI Moment是一场视觉盛宴，通过艺术与科技的完美融合，展现人类对AGI的无限想象。在这里，每一刻都是人类创意与人工智能碰撞的瞬间。",
+              "description": "AGI Moment is a visual feast that showcases humanity's infinite imagination of AGI through the perfect fusion of art and technology. Here, every moment is an instant of collision between human creativity and artificial intelligence.",
               "publisher": {
                 "@type": "Organization",
                 "name": "AGI Moment",

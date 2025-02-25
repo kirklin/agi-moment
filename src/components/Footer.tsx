@@ -33,7 +33,7 @@ export default function Footer() {
               AGI MOMENT
             </h3>
             <p className="mt-2 text-sm text-white/60">
-              探索 AGI 的无限可能
+              Exploring the Infinite Possibilities of AGI
             </p>
           </div>
 
@@ -50,7 +50,7 @@ export default function Footer() {
               href="mailto:contact@agimoment.com"
               className="relative text-white/60 transition-all duration-300 hover:text-cyan-300"
             >
-              <span className="relative z-10">联系我们</span>
+              <span className="relative z-10">Contact Us</span>
             </a>
           </div>
         </div>

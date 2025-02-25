@@ -6,13 +6,6 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
   },
 
-  // i18n配置
-  i18n: {
-    locales: ["en", "zh"],
-    defaultLocale: "zh",
-    localeDetection: true,
-  },
-
   // 压缩配置
   compress: true,
 
@@ -23,7 +16,6 @@ const nextConfig = {
 
   // 资源优化
   optimizeFonts: true,
-  optimizeImages: true,
 
   // 安全配置
   headers: async () => [
