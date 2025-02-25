@@ -11,18 +11,22 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://agimoment.com"),
-  title: "AGI Moment - Imagine the Infinite Possibilities of AGI",
-  description: "AGI Moment is a visual feast that showcases humanity's infinite imagination of AGI through the perfect fusion of art and technology. Here, every moment is an instant of collision between human creativity and artificial intelligence.",
+  title: "AGI Moment | Exploring the Frontier of Artificial General Intelligence",
+  description: "AGI Moment is a curated exploration of Artificial General Intelligence breakthroughs, featuring interactive visualizations, expert insights, and thought-provoking perspectives on how AGI will transform our future. Discover the intersection of human creativity and machine intelligence.",
   keywords: [
     "AGI",
     "Artificial General Intelligence",
-    "Creativity",
-    "Art",
-    "Future",
-    "Imagination",
-    "Tech Art",
-    "Digital Art",
-    "Futurism",
+    "AGI research",
+    "future of AI",
+    "machine intelligence",
+    "AI breakthroughs",
+    "cognitive computing",
+    "AI ethics",
+    "technological singularity",
+    "neural networks",
+    "deep learning",
+    "machine consciousness",
+    "AI visualization",
     "Kirk Lin",
   ],
   authors: [{ name: "Kirk Lin", url: "https://github.com/kirklin" }],
@@ -33,16 +37,9 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  alternates: {
-    canonical: "/",
-    languages: {
-      "en-US": "/en",
-      "zh-CN": "/zh",
-    },
-  },
   openGraph: {
-    title: "AGI Moment - Imagine the Infinite Possibilities of AGI",
-    description: "AGI Moment is a visual feast that showcases humanity's infinite imagination of AGI through the perfect fusion of art and technology. Here, every moment is an instant of collision between human creativity and artificial intelligence.",
+    title: "AGI Moment | Exploring the Frontier of Artificial General Intelligence",
+    description: "Dive into the fascinating world of Artificial General Intelligence through interactive visualizations and thought-provoking content. Explore how AGI is reshaping our understanding of intelligence and creativity at the intersection of human ingenuity and machine learning.",
     url: "https://agimoment.com",
     siteName: "AGI Moment",
     images: [
@@ -50,7 +47,7 @@ export const metadata: Metadata = {
         url: "https://agimoment.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "AGI Moment - Exploring the Future of AGI",
+        alt: "AGI Moment - Visualizing the Future of Artificial General Intelligence",
       },
     ],
     locale: "en_US",
@@ -58,9 +55,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AGI Moment - Imagine the Infinite Possibilities of AGI",
-    description: "A visual feast showcasing humanity's infinite imagination of AGI through the perfect fusion of art and technology. Experience the magical moments where human creativity meets artificial intelligence.",
-    creator: "@kirklin",
+    title: "AGI Moment | Exploring the Frontier of Artificial General Intelligence",
+    description: "Discover interactive visualizations and thought-provoking perspectives on Artificial General Intelligence. Explore the evolution of AI from the Turing Test to modern breakthroughs, and glimpse into our collective technological future.",
+    creator: "@lkirkun",
     images: ["https://agimoment.com/twitter-image.png"],
   },
   robots: {
@@ -74,9 +71,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-site-verification",
-  },
 };
 
 export default function RootLayout({
@@ -87,8 +81,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="alternate" hrefLang="en" href="https://agimoment.com/en" />
-        <link rel="alternate" hrefLang="zh" href="https://agimoment.com/zh" />
         <Script
           id="structured-data"
           type="application/ld+json"
@@ -104,13 +96,23 @@ export default function RootLayout({
                 "name": "Kirk Lin",
                 "url": "https://github.com/kirklin",
               },
-              "description": "AGI Moment is a visual feast that showcases humanity's infinite imagination of AGI through the perfect fusion of art and technology. Here, every moment is an instant of collision between human creativity and artificial intelligence.",
+              "description": "AGI Moment is a curated exploration of Artificial General Intelligence breakthroughs, featuring interactive visualizations, expert insights, and thought-provoking perspectives on how AGI will transform our future.",
               "publisher": {
                 "@type": "Organization",
                 "name": "AGI Moment",
                 "url": "https://agimoment.com",
               },
-              "inLanguage": ["en", "zh"],
+              "inLanguage": "en",
+              "keywords": "AGI, Artificial General Intelligence, AI research, future of AI, machine intelligence",
+              "about": {
+                "@type": "Thing",
+                "name": "Artificial General Intelligence",
+                "description": "Artificial General Intelligence (AGI) refers to highly autonomous systems that outperform humans at most economically valuable work and can learn to perform virtually any task.",
+              },
+              "audience": {
+                "@type": "Audience",
+                "audienceType": "AI researchers, technology enthusiasts, futurists, and anyone interested in the evolution of artificial intelligence",
+              },
             }),
           }}
         />

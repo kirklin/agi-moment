@@ -19,13 +19,13 @@ const theme = {
   },
 };
 
-// 生成随机字符用于文字故障效果
+// Generate random characters for text glitch effect
 function generateRandomChar() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   return chars[Math.floor(Math.random() * chars.length)];
 }
 
-// 优化的节点生成函数
+// Optimized node generation function
 function generateNodes(count: number) {
   return Array.from({ length: count }, () => ({
     x: Math.random() * 100,
@@ -38,7 +38,7 @@ function generateNodes(count: number) {
   }));
 }
 
-// 优化的连接生成函数
+// Optimized connection generation function
 function generateConnections(nodes: any[]) {
   return nodes.reduce((connections: any[], node, i) => {
     nodes.slice(i + 1).forEach((otherNode, j) => {
@@ -68,7 +68,7 @@ export default function Hero() {
   const [nodes, setNodes] = useState<any[]>([]);
   const [connections, setConnections] = useState<any[]>([]);
 
-  // 初始化
+  // Initialization
   useLayoutEffect(() => {
     setIsClient(true);
     const initialNodes = generateNodes(NODES_COUNT);
@@ -77,7 +77,7 @@ export default function Hero() {
     setConnections(initialConnections);
   }, []);
 
-  // 优化的鼠标移动处理函数
+  // Optimized mouse movement handler
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const { clientX, clientY } = e;
 
@@ -91,23 +91,23 @@ export default function Hero() {
     }
   }, []);
 
-  // 鼠标效果
+  // Mouse effect
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [handleMouseMove]);
 
-  // GSAP 动画
+  // GSAP animations
   useGSAP(() => {
     if (!isClient || nodes.length === 0) {
       return;
     }
 
-    // 清理之前的动画
+    // Clean up previous animations
     animationsRef.current.forEach(animation => animation.kill());
     animationsRef.current = [];
 
-    // 节点动画
+    // Node animations
     nodes.forEach((_, i) => {
       const animation = gsap.to(`#node-${i}`, {
         y: "random(-10, 10)",
@@ -121,7 +121,7 @@ export default function Hero() {
     });
   }, { scope: containerRef, dependencies: [isClient, nodes] });
 
-  // 文字故障效果
+  // Text glitch effect
   useEffect(() => {
     if (!isClient) {
       return;
@@ -172,7 +172,7 @@ export default function Hero() {
 
   return (
     <div ref={containerRef} className="relative min-h-screen w-full overflow-hidden bg-black">
-      {/* 背景效果 */}
+      {/* Background effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 opacity-30">
           <motion.div
@@ -202,7 +202,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* 神经网络可视化 */}
+      {/* Neural network visualization */}
       <div className="absolute inset-0 parallax-slow">
         <svg className="h-full w-full opacity-20">
           {connections.map((conn, i) => (
@@ -246,7 +246,7 @@ export default function Hero() {
         </svg>
       </div>
 
-      {/* 主要内容 */}
+      {/* Main content */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
         <motion.h1
           ref={titleRef}
@@ -267,7 +267,7 @@ export default function Hero() {
           Exploring the Future of Artificial General Intelligence
         </motion.p>
 
-        {/* 滚动提示 */}
+        {/* Scroll indicator */}
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
           animate={{
@@ -296,7 +296,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* 自定义光标效果 */}
+      {/* Custom cursor effect */}
       <div
         ref={cursorRef}
         className="pointer-events-none fixed left-0 top-0 z-50 size-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-cyan-500/10 to-purple-500/10 blur-3xl"
