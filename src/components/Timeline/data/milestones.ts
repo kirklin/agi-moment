@@ -65,15 +65,26 @@ export const milestones: Milestone[] = [
     year: 2011,
     title: "IBM Watson",
     description: "IBM Watson defeats human champions on the quiz show Jeopardy!",
-    longDescription: `In February 2011, IBM's Watson system competed against two human champions on Jeopardy!,
-    demonstrating remarkable natural language processing capabilities.`,
+    longDescription: `In February 2011, IBM's Watson system competed against champions Ken Jennings and Brad Rutter on Jeopardy!,
+    winning the $1 million prize and demonstrating remarkable natural language processing capabilities. This historic match
+    showcased AI's ability to understand context, puns, and ambiguity in human language.`,
     scene: {
       type: "jeopardy",
       questions: [
         {
-          category: "Science",
-          question: "This physicist began his career in the patent office",
-          answer: "Who is Einstein?",
+          category: "U.S. CITIES",
+          question: "Its largest airport is named for a World War II hero; its second largest, for a World War II battle",
+          answer: "What is Chicago?",
+        },
+        {
+          category: "LITERARY CHARACTER APB",
+          question: "Wanted for general evil-ness; last seen at the Tower of Barad-Dur; it's a giant eye, folks. Kinda hard to miss",
+          answer: "Who is Sauron?",
+        },
+        {
+          category: "OLYMPIC ODDITIES",
+          question: "It was the anatomical oddity of U.S. gymnast George Eyser, who won a gold medal on the parallel bars in 1904",
+          answer: "What is a wooden leg?",
         },
       ],
     },
