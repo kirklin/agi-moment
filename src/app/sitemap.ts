@@ -1,7 +1,15 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://agimoment.com";
+  // 配置网站的规范域名
+  // 网站会自动将普通域名(https://agimoment.com)重定向到www域名(https://www.agimoment.com)
+  // 因此www版本是规范版本(canonical version)
+  const baseUrl = "https://www.agimoment.com";
+  const nonWwwBaseUrl = "https://agimoment.com";
+
+  // 由于已配置重定向，sitemap只需包含规范版本(www)的URL
+  const includeNonWwwVersion = false;
+
   const currentDate = new Date();
 
   // Define all routes
@@ -28,12 +36,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // Generate sitemap entries
-  const sitemapEntries: MetadataRoute.Sitemap = routes.map(route => ({
+  let sitemapEntries: MetadataRoute.Sitemap = routes.map(route => ({
     url: `${baseUrl}${route.url}`,
     lastModified: route.lastModified,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
+
+  // 如果需要，添加非www版本的URL（通常不需要，因为已配置重定向）
+  if (includeNonWwwVersion) {
+    const nonWwwEntries = routes.map(route => ({
+      url: `${nonWwwBaseUrl}${route.url}`,
+      lastModified: route.lastModified,
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
+    }));
+    sitemapEntries = [...sitemapEntries, ...nonWwwEntries];
+  }
 
   // Add special entries for AI milestones as creative explorations
   const milestones = [
@@ -89,6 +108,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     });
+
+    // 如果需要，添加非www版本的里程碑页面
+    if (includeNonWwwVersion) {
+      sitemapEntries.push({
+        url: `${nonWwwBaseUrl}/milestones/${milestone.id}`,
+        lastModified: currentDate,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      });
+    }
   });
 
   // Add creative showcase pages
@@ -101,6 +130,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     });
+
+    // 如果需要，添加非www版本的展示页面
+    if (includeNonWwwVersion) {
+      sitemapEntries.push({
+        url: `${nonWwwBaseUrl}/showcase/${category}`,
+        lastModified: currentDate,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      });
+    }
   });
 
   return sitemapEntries;
