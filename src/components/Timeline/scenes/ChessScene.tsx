@@ -1,6 +1,8 @@
 import type { ChessSceneProps } from "../types";
 import { Chess } from "chess.js";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useState } from "react";
+import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
+import { useVisibilityTimer } from "../../../utils/hooks/useVisibilityTimer";
 
 // 辅助函数：获取棋子符号
 function getPieceSymbol(piece: string) {
@@ -25,38 +27,7 @@ const ChessScene = memo(({ gameState }: ChessSceneProps) => {
   const [chess] = useState(() => new Chess(gameState.position));
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [boardPosition, setBoardPosition] = useState(gameState.position);
-  const [isVisible, setIsVisible] = useState(false);
-  const sceneRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // 设置Intersection Observer来检测组件是否在视口中
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // 当组件进入视口时，设置isVisible为true
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      },
-      {
-        root: null, // 使用视口作为根
-        rootMargin: "0px",
-        threshold: 0.3, // 当30%的组件可见时触发
-      },
-    );
-
-    if (sceneRef.current) {
-      observer.observe(sceneRef.current);
-    }
-
-    return () => {
-      if (sceneRef.current) {
-        observer.unobserve(sceneRef.current);
-      }
-    };
-  }, []);
+  const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
 
   // 重置棋盘状态
   useEffect(() => {
@@ -65,29 +36,14 @@ const ChessScene = memo(({ gameState }: ChessSceneProps) => {
     setCurrentMoveIndex(0);
   }, [chess, gameState.position]);
 
-  // 执行棋步动画
-  useEffect(() => {
-    // 清除现有的定时器
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+  // 使用自定义Hook管理定时器，执行棋步动画
+  useVisibilityTimer(() => {
+    if (currentMoveIndex < gameState.moves.length) {
+      chess.move(gameState.moves[currentMoveIndex]);
+      setBoardPosition(chess.fen());
+      setCurrentMoveIndex(prev => prev + 1);
     }
-
-    // 只有当组件可见且还有棋步可走时才执行动画
-    if (isVisible && currentMoveIndex < gameState.moves.length) {
-      timeoutRef.current = setTimeout(() => {
-        chess.move(gameState.moves[currentMoveIndex]);
-        setBoardPosition(chess.fen());
-        setCurrentMoveIndex(prev => prev + 1);
-      }, 1500);
-    }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [chess, currentMoveIndex, gameState.moves, isVisible]);
+  }, 1500, isVisible && currentMoveIndex < gameState.moves.length, [chess, currentMoveIndex, gameState.moves]);
 
   return (
     <div ref={sceneRef} className="chess-scene h-full">

@@ -1,43 +1,14 @@
 import type { GoSceneProps } from "../types";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useState } from "react";
+import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
+import { useVisibilityTimer } from "../../../utils/hooks/useVisibilityTimer";
 
 const GoScene = memo(({ gameState }: GoSceneProps) => {
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [board, setBoard] = useState<string[][]>(() =>
     Array.from({ length: 19 }, () => Array.from({ length: 19 }, () => "")),
   );
-  const [isVisible, setIsVisible] = useState(false);
-  const sceneRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // 设置Intersection Observer来检测组件是否在视口中
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // 当组件进入视口时，设置isVisible为true
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      },
-      {
-        root: null, // 使用视口作为根
-        rootMargin: "0px",
-        threshold: 0.3, // 当30%的组件可见时触发
-      },
-    );
-
-    if (sceneRef.current) {
-      observer.observe(sceneRef.current);
-    }
-
-    return () => {
-      if (sceneRef.current) {
-        observer.unobserve(sceneRef.current);
-      }
-    };
-  }, []);
+  const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
 
   // 重置棋盘状态
   useEffect(() => {
@@ -45,33 +16,18 @@ const GoScene = memo(({ gameState }: GoSceneProps) => {
     setBoard(Array.from({ length: 19 }, () => Array.from({ length: 19 }, () => "")));
   }, []);
 
-  // 执行棋步动画
-  useEffect(() => {
-    // 清除现有的定时器
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+  // 使用自定义Hook管理定时器，执行棋步动画
+  useVisibilityTimer(() => {
+    if (currentMoveIndex < gameState.moves.length) {
+      const [x, y] = gameState.moves[currentMoveIndex].split("-").map(Number);
+      setBoard((prev) => {
+        const newBoard = prev.map(row => [...row]);
+        newBoard[x][y] = currentMoveIndex % 2 === 0 ? "black" : "white";
+        return newBoard;
+      });
+      setCurrentMoveIndex(prev => prev + 1);
     }
-
-    // 只有当组件可见且还有棋步可走时才执行动画
-    if (isVisible && currentMoveIndex < gameState.moves.length) {
-      timeoutRef.current = setTimeout(() => {
-        const [x, y] = gameState.moves[currentMoveIndex].split("-").map(Number);
-        setBoard((prev) => {
-          const newBoard = prev.map(row => [...row]);
-          newBoard[x][y] = currentMoveIndex % 2 === 0 ? "black" : "white";
-          return newBoard;
-        });
-        setCurrentMoveIndex(prev => prev + 1);
-      }, 1500);
-    }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [currentMoveIndex, gameState.moves, isVisible]);
+  }, 1500, isVisible && currentMoveIndex < gameState.moves.length, [currentMoveIndex, gameState.moves]);
 
   return (
     <div ref={sceneRef} className="go-scene h-full">

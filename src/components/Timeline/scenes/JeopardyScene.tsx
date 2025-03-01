@@ -1,14 +1,14 @@
 import type { JeopardySceneProps } from "../types";
 import { motion } from "framer-motion";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useState } from "react";
+import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
+import { useVisibilityTimer } from "../../../utils/hooks/useVisibilityTimer";
 
 const JeopardyScene = memo(({ questions: _questions }: JeopardySceneProps) => {
   const [stage, setStage] = useState<"intro" | "question" | "thinking" | "answer">("intro");
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [showConfidence, setShowConfidence] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const sceneRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
 
   const historicalQuestions = [
     {
@@ -39,35 +39,6 @@ const JeopardyScene = memo(({ questions: _questions }: JeopardySceneProps) => {
 
   const currentQuestion = historicalQuestions[activeQuestion];
 
-  // 设置Intersection Observer来检测组件是否在视口中
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // 当组件进入视口时，设置isVisible为true
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      },
-      {
-        root: null, // 使用视口作为根
-        rootMargin: "0px",
-        threshold: 0.3, // 当30%的组件可见时触发
-      },
-    );
-
-    if (sceneRef.current) {
-      observer.observe(sceneRef.current);
-    }
-
-    return () => {
-      if (sceneRef.current) {
-        observer.unobserve(sceneRef.current);
-      }
-    };
-  }, []);
-
   // 重置状态
   useEffect(() => {
     setStage("intro");
@@ -75,42 +46,33 @@ const JeopardyScene = memo(({ questions: _questions }: JeopardySceneProps) => {
     setShowConfidence(false);
   }, []);
 
-  // 场景动画控制
-  useEffect(() => {
-    // 清除现有的定时器
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-
-    // 只有当组件可见时才执行动画
-    if (!isVisible) {
-      return;
-    }
-
+  // 使用自定义Hook管理场景动画
+  useVisibilityTimer(() => {
     if (stage === "intro") {
-      timerRef.current = setTimeout(() => setStage("question"), 2000);
-    } else if (stage === "question") {
-      timerRef.current = setTimeout(() => setStage("thinking"), 3000);
-    } else if (stage === "thinking") {
-      timerRef.current = setTimeout(() => {
-        setStage("answer");
-        setShowConfidence(true);
-      }, 2500);
-    } else if (stage === "answer" && activeQuestion < historicalQuestions.length - 1) {
-      timerRef.current = setTimeout(() => {
-        setActiveQuestion(prev => prev + 1);
-        setStage("question");
-        setShowConfidence(false);
-      }, 4000);
+      setStage("question");
     }
+  }, 2000, isVisible && stage === "intro", [stage]);
 
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
-  }, [stage, activeQuestion, isVisible]);
+  useVisibilityTimer(() => {
+    if (stage === "question") {
+      setStage("thinking");
+    }
+  }, 3000, isVisible && stage === "question", [stage]);
+
+  useVisibilityTimer(() => {
+    if (stage === "thinking") {
+      setStage("answer");
+      setShowConfidence(true);
+    }
+  }, 2500, isVisible && stage === "thinking", [stage]);
+
+  useVisibilityTimer(() => {
+    if (stage === "answer" && activeQuestion < historicalQuestions.length - 1) {
+      setActiveQuestion(prev => prev + 1);
+      setStage("question");
+      setShowConfidence(false);
+    }
+  }, 4000, isVisible && stage === "answer", [stage, activeQuestion]);
 
   return (
     <div ref={sceneRef} className="jeopardy-scene h-full">

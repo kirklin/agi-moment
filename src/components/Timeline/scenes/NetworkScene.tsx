@@ -1,42 +1,13 @@
 import type { NetworkSceneProps } from "../types";
 import { motion } from "framer-motion";
 import { memo, useEffect, useRef, useState } from "react";
+import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
 
 const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
-  const [isVisible, setIsVisible] = useState(false);
-  const sceneRef = useRef<HTMLDivElement>(null);
+  const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // 设置Intersection Observer来检测组件是否在视口中
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // 当组件进入视口时，设置isVisible为true
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      },
-      {
-        root: null, // 使用视口作为根
-        rootMargin: "0px",
-        threshold: 0.3, // 当30%的组件可见时触发
-      },
-    );
-
-    if (sceneRef.current) {
-      observer.observe(sceneRef.current);
-    }
-
-    return () => {
-      if (sceneRef.current) {
-        observer.unobserve(sceneRef.current);
-      }
-    };
-  }, []);
 
   // 重置动画状态
   useEffect(() => {

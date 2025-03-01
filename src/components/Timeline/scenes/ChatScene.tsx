@@ -1,70 +1,26 @@
 import type { ChatSceneProps } from "../types";
 import { motion } from "framer-motion";
 import { memo, useEffect, useRef, useState } from "react";
+import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
+import { useVisibilityTimer } from "../../../utils/hooks/useVisibilityTimer";
 import TypewriterEffect from "../components/TypewriterEffect";
 
 const ChatScene = memo(({ conversation }: ChatSceneProps) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const sceneRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // 设置Intersection Observer来检测组件是否在视口中
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // 当组件进入视口时，设置isVisible为true
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      },
-      {
-        root: null, // 使用视口作为根
-        rootMargin: "0px",
-        threshold: 0.3, // 当30%的组件可见时触发
-      },
-    );
-
-    if (sceneRef.current) {
-      observer.observe(sceneRef.current);
-    }
-
-    return () => {
-      if (sceneRef.current) {
-        observer.unobserve(sceneRef.current);
-      }
-    };
-  }, []);
+  const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
 
   // 重置消息索引
   useEffect(() => {
     setCurrentMessageIndex(0);
   }, []);
 
-  // 根据可见性控制消息显示
-  useEffect(() => {
-    // 清除现有的定时器
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+  // 使用自定义Hook管理定时器，当组件可见且还有消息可显示时显示下一条消息
+  useVisibilityTimer(() => {
+    if (currentMessageIndex < conversation.length) {
+      setCurrentMessageIndex(prev => prev + 1);
     }
-
-    // 只有当组件可见且还有消息可显示时才继续
-    if (isVisible && currentMessageIndex < conversation.length) {
-      timeoutRef.current = setTimeout(() => {
-        setCurrentMessageIndex(prev => prev + 1);
-      }, 2000);
-    }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [currentMessageIndex, conversation.length, isVisible]);
+  }, 2000, isVisible, [currentMessageIndex, conversation.length]);
 
   // 滚动到最新消息
   useEffect(() => {
