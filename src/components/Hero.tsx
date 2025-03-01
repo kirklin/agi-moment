@@ -1,57 +1,18 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "~/utils/gsap";
+import CanvasWaves from "./CanvasWaves";
 
 // Constants
-const NODES_COUNT = 20;
 const GLITCH_INTERVAL = 3000;
 const GLITCH_DURATION = 500;
-
-// Theme
-const theme = {
-  colors: {
-    primary: "rgba(0, 255, 255, 0.9)",
-    secondary: "rgba(255, 0, 255, 0.9)",
-    background: "#000000",
-  },
-};
 
 // Generate random characters for text glitch effect
 function generateRandomChar() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   return chars[Math.floor(Math.random() * chars.length)];
-}
-
-// Optimized node generation function
-function generateNodes(count: number) {
-  return Array.from({ length: count }, () => ({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    radius: Math.random() * 2 + 1,
-    velocity: {
-      x: (Math.random() - 0.5) * 0.1,
-      y: (Math.random() - 0.5) * 0.1,
-    },
-  }));
-}
-
-// Optimized connection generation function
-function generateConnections(nodes: any[]) {
-  return nodes.reduce((connections: any[], node, i) => {
-    nodes.slice(i + 1).forEach((otherNode, j) => {
-      if (Math.random() > 0.7) {
-        connections.push({
-          from: i,
-          to: j + i + 1,
-          opacity: Math.random() * 0.2 + 0.1,
-        });
-      }
-    });
-    return connections;
-  }, []);
 }
 
 export default function Hero() {
@@ -60,21 +21,14 @@ export default function Hero() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
-  const animationsRef = useRef<gsap.core.Tween[]>([]);
 
   // State
   const [glitchText, setGlitchText] = useState("AGI MOMENT");
   const [isClient, setIsClient] = useState(false);
-  const [nodes, setNodes] = useState<any[]>([]);
-  const [connections, setConnections] = useState<any[]>([]);
 
   // Initialization
   useLayoutEffect(() => {
     setIsClient(true);
-    const initialNodes = generateNodes(NODES_COUNT);
-    const initialConnections = generateConnections(initialNodes);
-    setNodes(initialNodes);
-    setConnections(initialConnections);
   }, []);
 
   // Optimized mouse movement handler
@@ -96,30 +50,6 @@ export default function Hero() {
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [handleMouseMove]);
-
-  // GSAP animations
-  useGSAP(() => {
-    if (!isClient || nodes.length === 0) {
-      return;
-    }
-
-    // Clean up previous animations
-    animationsRef.current.forEach(animation => animation.kill());
-    animationsRef.current = [];
-
-    // Node animations
-    nodes.forEach((_, i) => {
-      const animation = gsap.to(`#node-${i}`, {
-        y: "random(-10, 10)",
-        x: "random(-10, 10)",
-        duration: "random(4, 8)",
-        repeat: -1,
-        yoyo: true,
-        ease: "none",
-      });
-      animationsRef.current.push(animation);
-    });
-  }, { scope: containerRef, dependencies: [isClient, nodes] });
 
   // Text glitch effect
   useEffect(() => {
@@ -172,7 +102,10 @@ export default function Hero() {
 
   return (
     <div ref={containerRef} className="relative min-h-screen w-full overflow-hidden bg-black">
-      {/* Background effects */}
+      {/* 波浪背景效果 - 使用Canvas实现 */}
+      <CanvasWaves />
+
+      {/* 背景渐变效果 */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 opacity-30">
           <motion.div
@@ -202,51 +135,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Neural network visualization */}
-      <div className="absolute inset-0 parallax-slow">
-        <svg className="h-full w-full opacity-20">
-          {connections.map((conn, i) => (
-            <motion.line
-              key={`conn-${i}`}
-              x1={`${nodes[conn.from].x}%`}
-              y1={`${nodes[conn.from].y}%`}
-              x2={`${nodes[conn.to].x}%`}
-              y2={`${nodes[conn.to].y}%`}
-              stroke="url(#gradient-line)"
-              strokeWidth="0.3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: conn.opacity }}
-              transition={{ duration: 1 }}
-            />
-          ))}
-          {nodes.map((node, i) => (
-            <motion.circle
-              key={`node-${i}`}
-              id={`node-${i}`}
-              cx={`${node.x}%`}
-              cy={`${node.y}%`}
-              r={node.radius}
-              fill="url(#gradient-dot)"
-              className="animate-pulse"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.5, delay: i * 0.02 }}
-            />
-          ))}
-          <defs>
-            <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor={theme.colors.primary} />
-              <stop offset="100%" stopColor={theme.colors.secondary} />
-            </linearGradient>
-            <radialGradient id="gradient-dot" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor={theme.colors.primary} />
-              <stop offset="100%" stopColor={theme.colors.secondary} />
-            </radialGradient>
-          </defs>
-        </svg>
-      </div>
-
-      {/* Main content */}
+      {/* 主要内容 */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
         <motion.h1
           ref={titleRef}
