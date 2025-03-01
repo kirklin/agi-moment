@@ -1,27 +1,80 @@
 import type { NetworkSceneProps } from "../types";
 import { motion } from "framer-motion";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
+  const [isVisible, setIsVisible] = useState(false);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 设置Intersection Observer来检测组件是否在视口中
   useEffect(() => {
-    const timer = setInterval(() => {
-      setStep((prev) => {
-        if (prev >= networkState.layers.length - 1) {
-          setDirection("backward");
-          return prev - 1;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // 当组件进入视口时，设置isVisible为true
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
         }
-        if (prev <= 0 && direction === "backward") {
-          setDirection("forward");
-          return prev + 1;
-        }
-        return direction === "forward" ? prev + 1 : prev - 1;
-      });
-    }, 2000);
-    return () => clearInterval(timer);
-  }, [direction, networkState.layers.length]);
+      },
+      {
+        root: null, // 使用视口作为根
+        rootMargin: "0px",
+        threshold: 0.3, // 当30%的组件可见时触发
+      },
+    );
+
+    if (sceneRef.current) {
+      observer.observe(sceneRef.current);
+    }
+
+    return () => {
+      if (sceneRef.current) {
+        observer.unobserve(sceneRef.current);
+      }
+    };
+  }, []);
+
+  // 重置动画状态
+  useEffect(() => {
+    setStep(0);
+    setDirection("forward");
+  }, []);
+
+  // 根据可见性控制动画
+  useEffect(() => {
+    // 清除现有的定时器
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    // 如果组件可见，则启动动画
+    if (isVisible) {
+      intervalRef.current = setInterval(() => {
+        setStep((prev) => {
+          if (prev >= networkState.layers.length - 1) {
+            setDirection("backward");
+            return prev - 1;
+          }
+          if (prev <= 0 && direction === "backward") {
+            setDirection("forward");
+            return prev + 1;
+          }
+          return direction === "forward" ? prev + 1 : prev - 1;
+        });
+      }, 2000);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isVisible, direction, networkState.layers.length]);
 
   // 计算节点垂直间距
   const getVerticalSpacing = () => {
@@ -43,7 +96,7 @@ const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
   };
 
   return (
-    <div className="network-scene h-full">
+    <div ref={sceneRef} className="network-scene h-full">
       <div className="relative w-full h-full">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
         <div className="absolute inset-0 flex flex-col items-center justify-center">

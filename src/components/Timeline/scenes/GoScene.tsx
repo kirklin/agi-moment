@@ -1,15 +1,61 @@
 import type { GoSceneProps } from "../types";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 const GoScene = memo(({ gameState }: GoSceneProps) => {
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [board, setBoard] = useState<string[][]>(() =>
     Array.from({ length: 19 }, () => Array.from({ length: 19 }, () => "")),
   );
+  const [isVisible, setIsVisible] = useState(false);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 设置Intersection Observer来检测组件是否在视口中
   useEffect(() => {
-    if (currentMoveIndex < gameState.moves.length) {
-      const timer = setTimeout(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // 当组件进入视口时，设置isVisible为true
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      },
+      {
+        root: null, // 使用视口作为根
+        rootMargin: "0px",
+        threshold: 0.3, // 当30%的组件可见时触发
+      },
+    );
+
+    if (sceneRef.current) {
+      observer.observe(sceneRef.current);
+    }
+
+    return () => {
+      if (sceneRef.current) {
+        observer.unobserve(sceneRef.current);
+      }
+    };
+  }, []);
+
+  // 重置棋盘状态
+  useEffect(() => {
+    setCurrentMoveIndex(0);
+    setBoard(Array.from({ length: 19 }, () => Array.from({ length: 19 }, () => "")));
+  }, []);
+
+  // 执行棋步动画
+  useEffect(() => {
+    // 清除现有的定时器
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    // 只有当组件可见且还有棋步可走时才执行动画
+    if (isVisible && currentMoveIndex < gameState.moves.length) {
+      timeoutRef.current = setTimeout(() => {
         const [x, y] = gameState.moves[currentMoveIndex].split("-").map(Number);
         setBoard((prev) => {
           const newBoard = prev.map(row => [...row]);
@@ -18,12 +64,17 @@ const GoScene = memo(({ gameState }: GoSceneProps) => {
         });
         setCurrentMoveIndex(prev => prev + 1);
       }, 1500);
-      return () => clearTimeout(timer);
     }
-  }, [currentMoveIndex, gameState.moves]);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [currentMoveIndex, gameState.moves, isVisible]);
 
   return (
-    <div className="go-scene h-full">
+    <div ref={sceneRef} className="go-scene h-full">
       <div className="relative w-full h-full">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
         <div className="absolute inset-0 flex flex-col items-center justify-center">

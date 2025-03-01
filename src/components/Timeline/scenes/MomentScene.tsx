@@ -1,28 +1,85 @@
 import type { MomentSceneProps } from "../types";
 import { motion } from "framer-motion";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 const MomentScene = memo(({ quote }: MomentSceneProps) => {
   const [showQuote, setShowQuote] = useState(false);
   const [showAuthor, setShowAuthor] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const quoteTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const authorTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 设置Intersection Observer来检测组件是否在视口中
   useEffect(() => {
-    const quoteTimer = setTimeout(() => {
-      setShowQuote(true);
-    }, 1000);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // 当组件进入视口时，设置isVisible为true
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      },
+      {
+        root: null, // 使用视口作为根
+        rootMargin: "0px",
+        threshold: 0.3, // 当30%的组件可见时触发
+      },
+    );
 
-    const authorTimer = setTimeout(() => {
-      setShowAuthor(true);
-    }, 3000);
+    if (sceneRef.current) {
+      observer.observe(sceneRef.current);
+    }
 
     return () => {
-      clearTimeout(quoteTimer);
-      clearTimeout(authorTimer);
+      if (sceneRef.current) {
+        observer.unobserve(sceneRef.current);
+      }
     };
   }, []);
 
+  // 重置状态
+  useEffect(() => {
+    setShowQuote(false);
+    setShowAuthor(false);
+  }, []);
+
+  // 根据可见性控制动画
+  useEffect(() => {
+    // 清除现有的定时器
+    if (quoteTimerRef.current) {
+      clearTimeout(quoteTimerRef.current);
+      quoteTimerRef.current = null;
+    }
+    if (authorTimerRef.current) {
+      clearTimeout(authorTimerRef.current);
+      authorTimerRef.current = null;
+    }
+
+    // 只有当组件可见时才执行动画
+    if (isVisible) {
+      quoteTimerRef.current = setTimeout(() => {
+        setShowQuote(true);
+      }, 1000);
+
+      authorTimerRef.current = setTimeout(() => {
+        setShowAuthor(true);
+      }, 1000);
+    }
+
+    return () => {
+      if (quoteTimerRef.current) {
+        clearTimeout(quoteTimerRef.current);
+      }
+      if (authorTimerRef.current) {
+        clearTimeout(authorTimerRef.current);
+      }
+    };
+  }, [isVisible]);
+
   return (
-    <div className="moment-scene h-full">
+    <div ref={sceneRef} className="moment-scene h-full">
       <div className="relative w-full h-full overflow-hidden">
         {/* 背景效果 */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />

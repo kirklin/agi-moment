@@ -1,11 +1,14 @@
 import type { JeopardySceneProps } from "../types";
 import { motion } from "framer-motion";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 const JeopardyScene = memo(({ questions: _questions }: JeopardySceneProps) => {
   const [stage, setStage] = useState<"intro" | "question" | "thinking" | "answer">("intro");
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [showConfidence, setShowConfidence] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const historicalQuestions = [
     {
@@ -36,38 +39,81 @@ const JeopardyScene = memo(({ questions: _questions }: JeopardySceneProps) => {
 
   const currentQuestion = historicalQuestions[activeQuestion];
 
+  // 设置Intersection Observer来检测组件是否在视口中
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // 当组件进入视口时，设置isVisible为true
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      },
+      {
+        root: null, // 使用视口作为根
+        rootMargin: "0px",
+        threshold: 0.3, // 当30%的组件可见时触发
+      },
+    );
+
+    if (sceneRef.current) {
+      observer.observe(sceneRef.current);
+    }
+
+    return () => {
+      if (sceneRef.current) {
+        observer.unobserve(sceneRef.current);
+      }
+    };
+  }, []);
+
+  // 重置状态
+  useEffect(() => {
+    setStage("intro");
+    setActiveQuestion(0);
+    setShowConfidence(false);
+  }, []);
+
   // 场景动画控制
   useEffect(() => {
+    // 清除现有的定时器
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+
+    // 只有当组件可见时才执行动画
+    if (!isVisible) {
+      return;
+    }
+
     if (stage === "intro") {
-      const timer = setTimeout(() => setStage("question"), 2000);
-      return () => clearTimeout(timer);
-    }
-
-    if (stage === "question") {
-      const timer = setTimeout(() => setStage("thinking"), 3000);
-      return () => clearTimeout(timer);
-    }
-
-    if (stage === "thinking") {
-      const timer = setTimeout(() => {
+      timerRef.current = setTimeout(() => setStage("question"), 2000);
+    } else if (stage === "question") {
+      timerRef.current = setTimeout(() => setStage("thinking"), 3000);
+    } else if (stage === "thinking") {
+      timerRef.current = setTimeout(() => {
         setStage("answer");
         setShowConfidence(true);
       }, 2500);
-      return () => clearTimeout(timer);
-    }
-
-    if (stage === "answer" && activeQuestion < historicalQuestions.length - 1) {
-      const timer = setTimeout(() => {
+    } else if (stage === "answer" && activeQuestion < historicalQuestions.length - 1) {
+      timerRef.current = setTimeout(() => {
         setActiveQuestion(prev => prev + 1);
         setStage("question");
         setShowConfidence(false);
       }, 4000);
-      return () => clearTimeout(timer);
     }
-  }, [stage, activeQuestion]);
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [stage, activeQuestion, isVisible]);
 
   return (
-    <div className="jeopardy-scene h-full">
+    <div ref={sceneRef} className="jeopardy-scene h-full">
       <div className="relative w-full h-full">
         {/* 背景效果 */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
