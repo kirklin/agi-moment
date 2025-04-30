@@ -1,36 +1,21 @@
 import type { MetadataRoute } from "next";
-import { getBaseUrl } from "~/lib/url";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Use the utility function to get the dynamic base URL
-  const baseUrl = getBaseUrl();
+  const baseUrl = "https://agimoment.com"; // Replace if your domain is different
 
-  // TODO: Replace these placeholder entries with your actual site structure
-  return [
-    {
-      url: baseUrl, // Homepage
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/about`, // Example: About page
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/[category-path]`, // Example: Category page placeholder
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/[resource-path]`, // Example: Resource page placeholder
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    // Add more URLs for your specific pages and content here
+  // Assuming default locale is 'en' and you have an 'about' page
+  // Add other static routes here as needed
+  const staticRoutes = [
+    "/",
+    "/about",
   ];
+
+  const sitemapEntries: MetadataRoute.Sitemap = staticRoutes.map(route => ({
+    url: `${baseUrl}${route === "/" ? "" : route}`, // Handle base URL concatenation
+    lastModified: new Date(), // Use current date, or fetch dynamically if possible
+    changeFrequency: "monthly", // Adjust based on how often content changes
+    priority: route === "/" ? 1 : 0.8, // Give homepage higher priority
+  }));
+
+  return sitemapEntries;
 }

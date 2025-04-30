@@ -1,25 +1,19 @@
-# TODO: Replace all bracketed placeholders below with your actual project information.
+# Introduction to AGI Moment
 
-# [Full Introduction to Your Boot-Next.js Project Name]
-
-> [Provide a detailed introduction (100-150 words) covering the core value, target audience, and key features of your Boot-Next.js project.]
+> AGI Moment provides an engaging exploration into Artificial General Intelligence (AGI). It features an interactive timeline tracing AI's history from foundational concepts like the Turing Test to modern breakthroughs like ChatGPT. The site targets AI researchers, tech enthusiasts, futurists, and anyone curious about AI's evolution and future impact. Key features include the interactive timeline, curated insights, and perspectives on AGI development, ethics, and societal transformation.
 
 ## Project Background
-[Add details about the project's background, vision, and mission (200-300 words). Why was it created? What problems does it solve?]
+AGI Moment was created by Kirk Lin to demystify Artificial General Intelligence and showcase its fascinating development journey. The vision is to foster informed discussion about AI's potential and challenges through accessible, visually engaging content. It aims to bridge the gap between complex AI concepts and public understanding, highlighting both the technological milestones and the ethical considerations shaping our future with intelligent machines. The mission is to be a go-to resource for understanding the past, present, and future trajectory of AGI.
 
 ## Content Category Details
-### [[Category 1 Name]](/[category-1-path])
-[Describe the content, features, and value of this category in detail (150-200 words).]
+### [AI History Timeline](https://agimoment.com/)
+This core section presents a visually interactive timeline detailing significant events and breakthroughs in AI research and development. Users can explore milestones from Alan Turing's early concepts to the rise of deep learning, large language models like ChatGPT, and key achievements like Deep Blue and AlphaGo. It provides context for understanding the current state and future potential of AGI.
 
-### [[Category 2 Name]](/[category-2-path])
-[Describe the content, features, and value of this category in detail (150-200 words).]
+### [About](https://agimoment.com/about)
+This page details the mission and vision behind AGI Moment. It introduces the creator, Kirk Lin, and explains the motivation for building a platform focused on AGI exploration. It outlines the site's commitment to providing clear, insightful content on AI advancements, ethics, and the broader implications of increasingly sophisticated machine intelligence for society.
 
 ## User Value
-[Describe the specific value users gain from the project and the problems it solves for them (200-300 words).]
+Users gain a clear, chronological understanding of how AI has evolved. The interactive timeline makes learning engaging. The site provides curated perspectives on complex topics like AGI capabilities, risks, and ethical dilemmas. It helps users, regardless of technical background, grasp the significance of AI advancements and participate in conversations about the future of technology and humanity. It serves as a starting point for deeper exploration into the field of Artificial General Intelligence.
 
 ## Recent Updates Details
-### [[Latest Content 1 Title]](/[latest-1-path])
-[Provide a summary and highlight the key value points of this content (100-150 words).]
-
-### [[Latest Content 2 Title]](/[latest-2-path])
-[Provide a summary and highlight the key value points of this content (100-150 words).]
+# (No specific recent updates provided)

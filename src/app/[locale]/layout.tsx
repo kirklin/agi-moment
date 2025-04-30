@@ -17,8 +17,8 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://agimoment.com"),
-  title: "AGI Moment | Exploring the Frontier of Artificial General Intelligence",
-  description: "AGI Moment is a curated exploration of Artificial General Intelligence breakthroughs, featuring interactive visualizations, expert insights, and thought-provoking perspectives on how AGI will transform our future. Discover the intersection of human creativity and machine intelligence.",
+  title: "AGI Moment: AI History Timeline & Future Insights",
+  description: "Explore AI's evolution on our interactive timeline, from Turing to AGI. Get insights on breakthroughs, ethics, and the future of machine intelligence.",
   keywords: [
     "Artificial General Intelligence",
     "AGI",
@@ -54,8 +54,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: "AGI Moment | Exploring the Frontier of Artificial General Intelligence",
-    description: "Dive into the fascinating world of Artificial General Intelligence through interactive visualizations and thought-provoking content. Explore how AGI is reshaping our understanding of intelligence and creativity at the intersection of human ingenuity and machine learning.",
+    title: "AGI Moment: AI History Timeline & Future Insights",
+    description: "Explore AI's evolution on our interactive timeline, from Turing to AGI. Get insights on breakthroughs, ethics, and the future of machine intelligence.",
     url: "https://agimoment.com",
     siteName: "AGI Moment",
     images: [
@@ -71,8 +71,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AGI Moment | Exploring the Frontier of Artificial General Intelligence",
-    description: "Discover interactive visualizations and thought-provoking perspectives on Artificial General Intelligence. Explore the evolution of AI from the Turing Test to modern breakthroughs, and glimpse into our collective technological future.",
+    title: "AGI Moment: AI History Timeline & Future Insights",
+    description: "Explore AI's evolution on our interactive timeline, from Turing to AGI. Get insights on breakthroughs, ethics, and the future of machine intelligence.",
     creator: "@lkirkun",
     images: ["https://agimoment.com/twitter-image.png"],
   },
@@ -129,7 +129,7 @@ export default async function RootLayout({
                 "name": "Kirk Lin",
                 "url": "https://github.com/kirklin",
               },
-              "description": "AGI Moment is a curated exploration of Artificial General Intelligence breakthroughs, featuring interactive visualizations, expert insights, and thought-provoking perspectives on how AGI will transform our future.",
+              "description": "Explore AI's evolution on our interactive timeline, from Turing to AGI. Get insights on breakthroughs, ethics, and the future of machine intelligence.",
               "publisher": {
                 "@type": "Organization",
                 "name": "AGI Moment",
