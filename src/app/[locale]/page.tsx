@@ -84,7 +84,7 @@ export default function Home({
           }),
         }}
       />
-      <main className="relative">
+      <main className="relative overflow-x-hidden">
         <Navbar />
         <article>
           <header>

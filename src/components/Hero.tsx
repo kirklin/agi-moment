@@ -106,7 +106,7 @@ export default function Hero() {
       <CanvasWaves />
 
       {/* 背景渐变效果 */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <motion.div
             className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,255,0.1),transparent_70%)]"

@@ -48,7 +48,7 @@ const Timeline = memo(() => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative bg-black">
+    <div ref={containerRef} className="relative bg-black overflow-x-hidden">
       {milestones.map((milestone, index) => (
         <TimelineCard
           key={milestone.id}

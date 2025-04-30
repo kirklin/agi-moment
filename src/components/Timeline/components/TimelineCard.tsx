@@ -52,7 +52,7 @@ const TimelineCard = memo(({
   return (
     <motion.div
       ref={cardRef}
-      className="relative min-h-screen w-full"
+      className="relative min-h-screen w-full overflow-hidden"
       initial={false}
       animate={{
         opacity: isActive ? 1 : 0.7,
