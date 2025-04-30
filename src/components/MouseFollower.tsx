@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "~/utils/gsap";
+import { gsap } from "~/lib/gsap";
 
 export default function MouseFollower() {
   const cursorRef = useRef<HTMLDivElement>(null);

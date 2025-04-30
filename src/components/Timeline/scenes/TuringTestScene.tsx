@@ -1,7 +1,7 @@
 import type { TuringTestSceneProps } from "../types";
 import { memo, useEffect, useRef, useState } from "react";
 import { Cursor, useTypewriter } from "react-simple-typewriter";
-import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
+import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 
 const TuringTestScene = memo(({ dialogue }: TuringTestSceneProps) => {
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);

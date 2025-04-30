@@ -1,8 +1,8 @@
 import type { GoSceneProps } from "../types";
 import { motion } from "framer-motion";
 import { memo, useEffect, useState } from "react";
-import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
-import { useVisibilityTimer } from "../../../utils/hooks/useVisibilityTimer";
+import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
+import { useVisibilityTimer } from "~/hooks/useVisibilityTimer";
 
 // 预定义更多的棋子位置，模拟真实对局的一部分
 const PREDEFINED_MOVES = [

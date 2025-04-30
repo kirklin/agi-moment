@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { SimplexNoise } from "~/utils/noise";
+import { SimplexNoise } from "~/lib/noise";
 
 /**
  * CanvasWaves 组件

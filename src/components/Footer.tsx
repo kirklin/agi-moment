@@ -2,7 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import { gsap } from "~/utils/gsap";
+import { gsap } from "~/lib/gsap";
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);

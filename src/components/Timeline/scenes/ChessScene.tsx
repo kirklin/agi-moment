@@ -1,8 +1,8 @@
 import type { ChessSceneProps } from "../types";
 import { Chess } from "chess.js";
 import { memo, useEffect, useState } from "react";
-import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
-import { useVisibilityTimer } from "../../../utils/hooks/useVisibilityTimer";
+import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
+import { useVisibilityTimer } from "~/hooks/useVisibilityTimer";
 
 // 辅助函数：获取棋子符号
 function getPieceSymbol(piece: string) {

@@ -1,7 +1,7 @@
 import type { NetworkSceneProps } from "../types";
 import { motion } from "framer-motion";
 import { memo, useEffect, useRef, useState } from "react";
-import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
+import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 
 const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
   const [step, setStep] = useState(0);

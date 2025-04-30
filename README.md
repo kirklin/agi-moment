@@ -1,56 +1,38 @@
-# AGI Moment
+# Boot Next.js
 
-<p align="center">
-  <img src="./src/assets/logo.png" alt="AGI Moment Logo" width="200" height="200">
-</p>
+This is a [Next.js](https://nextjs.org/) project
 
-<p align="center">
-  <strong>想象AGI的无限可能 | Imagine the Infinite Possibilities of AGI</strong>
-</p>
+## Getting Started
 
-<p align="center">
-  <a href="https://agimoment.com">访问网站 | Visit Website</a>
-</p>
+First, run the development server:
 
-## 🌟 关于 | About
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-AGI Moment 是一场视觉盛宴，通过艺术与科技的完美融合，展现人类对AGI的无限想象。在这里，每一刻都是人类创意与人工智能碰撞的瞬间，让我们一同期待AGI带来的奇妙未来。
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-AGI Moment is a visual feast that showcases humanity's infinite imagination of AGI through the perfect fusion of art and technology. Here, every moment is an instant of collision between human creativity and artificial intelligence, inviting us to anticipate the magical future that AGI will bring.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## ✨ 特点 | Features
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-- 🎨 艺术与科技的完美融合 | Perfect fusion of art and technology
-- 💫 沉浸式的视觉体验 | Immersive visual experience
-- 🌈 激发无限想象力 | Inspiring infinite imagination
-- 🚀 探索AGI的未来可能 | Exploring future possibilities of AGI
-- 🎭 创意与智能的碰撞 | Collision of creativity and intelligence
+## Learn More
 
-## 🛠️ 技术栈 | Tech Stack
+To learn more about Next.js, take a look at the following resources:
 
-- [Next.js](https://nextjs.org/)
-- [React](https://reactjs.org/)
-- [Three.js](https://threejs.org/)
-- [GSAP](https://greensock.com/gsap/)
-- [UnoCSS](https://github.com/unocss/unocss)
-- [TypeScript](https://www.typescriptlang.org/)
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## 🤝 贡献 | Contributing
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-欢迎为这个创意项目做出贡献！如果你有任何想法或建议，请随时提出 issue 或提交 pull request。
+## Deploy on Vercel
 
-We welcome contributions to this creative project! If you have any ideas or suggestions, feel free to open an issue or submit a pull request.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## 📝 许可证 | License
-
-[MIT License](./LICENSE)
-
-## 👨‍💻 作者 | Author
-
-[Kirk Lin](https://github.com/kirklin)
-
----
-
-<p align="center">
-  用创意定义AGI的未来 | Defining the Future of AGI with Creativity
-</p>
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

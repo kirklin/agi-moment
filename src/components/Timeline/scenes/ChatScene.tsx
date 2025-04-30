@@ -1,8 +1,8 @@
 import type { ChatSceneProps } from "../types";
 import { motion } from "framer-motion";
 import { memo, useEffect, useRef, useState } from "react";
-import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
-import { useVisibilityTimer } from "../../../utils/hooks/useVisibilityTimer";
+import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
+import { useVisibilityTimer } from "~/hooks/useVisibilityTimer";
 import TypewriterEffect from "../components/TypewriterEffect";
 
 const ChatScene = memo(({ conversation }: ChatSceneProps) => {

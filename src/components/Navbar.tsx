@@ -4,7 +4,7 @@ import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "~/utils/gsap";
+import { gsap } from "~/lib/gsap";
 
 // Navigation items configuration
 const navItems = [

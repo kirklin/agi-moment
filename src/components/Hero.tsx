@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { gsap } from "~/utils/gsap";
+import { gsap } from "~/lib/gsap";
 import CanvasWaves from "./CanvasWaves";
 
 // Constants

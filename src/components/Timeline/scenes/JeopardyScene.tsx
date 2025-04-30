@@ -1,8 +1,8 @@
 import type { JeopardySceneProps } from "../types";
 import { motion } from "framer-motion";
 import { memo, useEffect, useState } from "react";
-import { useIntersectionObserver } from "../../../utils/hooks/useIntersectionObserver";
-import { useVisibilityTimer } from "../../../utils/hooks/useVisibilityTimer";
+import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
+import { useVisibilityTimer } from "~/hooks/useVisibilityTimer";
 
 const JeopardyScene = memo(({ questions: _questions }: JeopardySceneProps) => {
   const [stage, setStage] = useState<"intro" | "question" | "thinking" | "answer">("intro");
