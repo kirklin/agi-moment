@@ -2,6 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "~/lib/gsap";
@@ -61,9 +62,19 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="nav-glow group relative text-xl font-bold text-white/90 transition-all duration-300 hover:text-cyan-300"
+          className="nav-glow group relative flex items-center text-xl font-bold text-white/90 transition-all duration-300 hover:text-cyan-300"
         >
-          <span className="relative z-10">AGI MOMENT</span>
+          <div className="relative w-[30px] h-[30px] sm:w-[36px] sm:h-[36px] md:w-[40px] md:h-[40px]">
+            <Image
+              src="/logo.svg"
+              alt="AGI MOMENT Logo"
+              fill
+              sizes="(max-width: 640px) 30px, (max-width: 768px) 36px, 40px"
+              className="object-contain"
+              priority
+            />
+          </div>
+          <span className="ml-2 relative z-10 text-sm sm:text-base md:text-xl">AGI MOMENT</span>
         </Link>
 
         {/* Desktop navigation */}
