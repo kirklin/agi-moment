@@ -126,16 +126,17 @@ const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
                               <motion.div
                                 key={targetIndex}
                                 className="absolute h-px bg-cyan-500/30"
+                                suppressHydrationWarning={true}
                                 style={{
-                                  width: length,
+                                  width: `${length.toFixed(3)}px`,
                                   left: "50%",
                                   top: "50%",
-                                  transform: `rotate(${angle}deg)`,
+                                  transform: `rotate(${angle.toFixed(4)}deg)`,
                                   transformOrigin: "0 0",
-                                  opacity: Math.abs(weight),
+                                  opacity: Number.parseFloat(Math.abs(weight).toFixed(3)),
                                 }}
                                 animate={{
-                                  opacity: step === layerIndex ? Math.abs(weight) : 0.1,
+                                  opacity: step === layerIndex ? Number.parseFloat(Math.abs(weight).toFixed(3)) : 0.1,
                                 }}
                                 transition={{ duration: 0.5 }}
                               />

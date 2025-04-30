@@ -52,6 +52,15 @@ const PREDEFINED_MOVES = [
 // 第37步 - AlphaGo的著名一手
 const MOVE_37 = "5-9";
 
+// Define a type for particle properties
+interface ParticleProps {
+  id: number;
+  left: string;
+  top: string;
+  duration: number;
+  delay: number;
+}
+
 const GoScene = memo(({ gameState }: GoSceneProps) => {
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [board, setBoard] = useState<string[][]>(() =>
@@ -61,6 +70,8 @@ const GoScene = memo(({ gameState }: GoSceneProps) => {
   const [showMove37, setShowMove37] = useState(false);
   const [showMoveLabel, setShowMoveLabel] = useState(false);
   const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
+  // State for particle properties
+  const [particleProps, setParticleProps] = useState<ParticleProps[]>([]);
 
   // 使用所有预定义的移动
   const allMoves = [...PREDEFINED_MOVES];
@@ -75,6 +86,20 @@ const GoScene = memo(({ gameState }: GoSceneProps) => {
     setShowMove37(false);
     setShowMoveLabel(false);
   }, []);
+
+  // Generate particle properties only on the client-side after mount
+  useEffect(() => {
+    const generateParticleProps = () => {
+      return Array.from({ length: 20 }).map((_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        duration: Math.random() * 5 + 5,
+        delay: Math.random() * 5,
+      }));
+    };
+    setParticleProps(generateParticleProps());
+  }, []); // Empty dependency array ensures this runs only once on client mount
 
   // 显示信息面板
   useVisibilityTimer(() => {
@@ -135,22 +160,23 @@ const GoScene = memo(({ gameState }: GoSceneProps) => {
           animate={{ opacity: 0.2 }}
           transition={{ duration: 2 }}
         >
-          {Array.from({ length: 20 }).map((_, i) => (
+          {/* Use generated particle properties from state */}
+          {particleProps.map(prop => (
             <motion.div
-              key={i}
+              key={prop.id}
               className="absolute size-1 rounded-full bg-blue-500"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: prop.left, // Use value from state
+                top: prop.top, // Use value from state
               }}
               animate={{
                 opacity: [0, 0.7, 0],
                 scale: [0, 1, 0],
               }}
               transition={{
-                duration: Math.random() * 5 + 5,
+                duration: prop.duration, // Use value from state
                 repeat: Infinity,
-                delay: Math.random() * 5,
+                delay: prop.delay, // Use value from state
               }}
             />
           ))}

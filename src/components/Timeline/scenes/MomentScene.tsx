@@ -4,18 +4,43 @@ import { memo, useEffect, useState } from "react";
 import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 import { useVisibilityTimer } from "~/hooks/useVisibilityTimer";
 
+// Define a type for particle properties
+interface ParticleProps {
+  id: number;
+  left: string;
+  top: string;
+  duration: number;
+  delay: number;
+}
+
 const MomentScene = memo(({ quote }: MomentSceneProps) => {
   const [showQuote, setShowQuote] = useState(false);
   const [showAuthor, setShowAuthor] = useState(false);
   const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
+  // State for particle properties
+  const [particleProps, setParticleProps] = useState<ParticleProps[]>([]);
 
-  // 重置状态
+  // Reset state
   useEffect(() => {
     setShowQuote(false);
     setShowAuthor(false);
   }, []);
 
-  // 使用自定义Hook管理定时器
+  // Generate particle properties only on the client-side after mount
+  useEffect(() => {
+    const generateParticleProps = () => {
+      return Array.from({ length: 50 }).map((_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        duration: Math.random() * 5 + 5,
+        delay: Math.random() * 5,
+      }));
+    };
+    setParticleProps(generateParticleProps());
+  }, []); // Empty dependency array ensures this runs only once on client mount
+
+  // Use custom Hook to manage timers
   useVisibilityTimer(() => {
     setShowQuote(true);
   }, 1000, isVisible);
@@ -37,22 +62,23 @@ const MomentScene = memo(({ quote }: MomentSceneProps) => {
           animate={{ opacity: 0.3 }}
           transition={{ duration: 2 }}
         >
-          {Array.from({ length: 50 }).map((_, i) => (
+          {/* Use generated particle properties from state */}
+          {particleProps.map(prop => (
             <motion.div
-              key={i}
+              key={prop.id}
               className="absolute size-1 rounded-full bg-cyan-500"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: prop.left, // Use value from state
+                top: prop.top, // Use value from state
               }}
               animate={{
                 opacity: [0, 1, 0],
                 scale: [0, 1, 0],
               }}
               transition={{
-                duration: Math.random() * 5 + 5,
+                duration: prop.duration, // Use value from state
                 repeat: Infinity,
-                delay: Math.random() * 5,
+                delay: prop.delay, // Use value from state
               }}
             />
           ))}
