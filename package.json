@@ -1,8 +1,31 @@
 {
-  "name": "boot-nextjs",
+  "name": "agi-moment",
   "type": "module",
   "version": "0.1.0",
   "private": true,
+  "description": "AGI Moment is a creative design project that visualizes and explores artificial general intelligence concepts through interactive experiences.",
+  "author": {
+    "name": "Kirk Lin",
+    "url": "https://github.com/kirklin"
+  },
+  "homepage": "https://github.com/kirklin/agi-moment",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kirklin/agi-moment"
+  },
+  "keywords": [
+    "artificial-general-intelligence",
+    "agi",
+    "ai-timeline",
+    "interactive-experience",
+    "ai-visualization",
+    "creative-design",
+    "next-js",
+    "digital-art",
+    "thought-experiment",
+    "ai-ethics",
+    "ai-future"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
