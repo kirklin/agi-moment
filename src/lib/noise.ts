@@ -147,7 +147,9 @@ export class SimplexNoise {
    */
   public noise2D(xin: number, yin: number): number {
     // 噪声贡献
-    let n0 = 0; let n1 = 0; let n2 = 0;
+    let n0 = 0;
+    let n1 = 0;
+    let n2 = 0;
 
     // 从正方形到三角形的倾斜因子
     const F2 = 0.5 * (Math.sqrt(3) - 1);
