@@ -152,7 +152,7 @@ export default async function RootLayout({
       </head>
       <body className={cn(
         spaceGrotesk.className,
-        "antialiased bg-black text-white min-h-screen overflow-x-hidden",
+        "antialiased bg-black text-white min-h-screen",
       )}
       >
         <ThemeProvider
@@ -163,7 +163,7 @@ export default async function RootLayout({
         >
           <NextIntlClientProvider locale={locale} messages={messages}>
             <MouseFollower />
-            <div id="app" className="relative overflow-x-hidden">
+            <div id="app" className="relative">
               {children}
             </div>
             <Analytics />
