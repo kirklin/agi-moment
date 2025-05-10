@@ -13,15 +13,15 @@ export async function generateMetadata({
 
   return {
     title: "About AGI Moment | Creative Exploration of AI's Future",
-    description: "AGI Moment is a creative design project that visualizes and explores artificial general intelligence concepts through interactive experiences, aiming to spark curiosity and thoughtful conversation about our technological future.",
+    description: "A creative project exploring artificial general intelligence through visual stories and interactive designs, sparking curiosity about our AI future.",
     alternates: createAlternates("/about", locale),
     openGraph: {
       title: "About AGI Moment | Creative Exploration of AI's Future",
-      description: "Discover our creative design project that visualizes artificial general intelligence concepts through interactive experiences, sparking curiosity and conversation about our technological future.",
+      description: "A creative project exploring artificial general intelligence through visual stories and interactive designs, sparking curiosity about our AI future.",
       type: "website",
       images: [
         {
-          url: "/og-image.png",
+          url: "/logo.svg",
           width: 1200,
           height: 630,
           alt: "AGI Moment - About Page",
@@ -31,8 +31,8 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: "About AGI Moment | Creative Exploration of AI's Future",
-      description: "Discover our creative design project that visualizes artificial general intelligence concepts through interactive experiences, sparking curiosity and conversation about our technological future.",
-      images: ["/twitter-image.png"],
+      description: "A creative project exploring artificial general intelligence through visual stories and interactive designs, sparking curiosity about our AI future.",
+      images: ["/logo.svg"],
     },
     robots: {
       index: true,
@@ -40,6 +40,5 @@ export async function generateMetadata({
     },
     creator: "Kirk Lin",
     authors: [{ name: "Kirk Lin", url: "https://github.com/kirklin" }],
-    keywords: ["AI visualization", "creative AI design", "future technology", "AI concepts", "Kirk Lin", "digital art", "interactive design", "thought experiment"],
   };
 }
