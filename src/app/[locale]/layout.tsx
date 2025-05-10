@@ -10,7 +10,7 @@ import Analytics from "~/components/Analytics";
 import MouseFollower from "~/components/MouseFollower";
 import { ThemeProvider } from "~/components/theme-provider";
 import { routing } from "~/lib/i18n/navigation";
-import { cn } from "~/lib/utils";
+import { cn, createAlternates } from "~/lib/utils";
 import "~/styles/global.css";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://agimoment.com"),
   title: "AGI Moment: AI History Timeline & Future Insights",
   description: "Explore AI's evolution on our interactive timeline, from Turing to AGI. Get insights on breakthroughs, ethics, and the future of machine intelligence.",
+  alternates: createAlternates("/"),
   keywords: [
     "Artificial General Intelligence",
     "AGI",

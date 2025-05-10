@@ -1,21 +1,8 @@
-import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import Script from "next/script";
 import React, { use } from "react";
 import Footer from "~/components/Footer";
 import Navbar from "~/components/Navbar";
-
-export const metadata: Metadata = {
-  title: "About AGI Moment | Creative Exploration of AI's Future",
-  description: "AGI Moment is a creative design project that visualizes and explores artificial general intelligence concepts through interactive experiences, aiming to spark curiosity and thoughtful conversation about our technological future.",
-  keywords: ["AI visualization", "creative AI design", "future technology", "AI concepts", "Kirk Lin", "digital art", "interactive design", "thought experiment"],
-  openGraph: {
-    title: "About AGI Moment | Creative Exploration of AI's Future",
-    description: "Discover our creative design project that visualizes artificial general intelligence concepts through interactive experiences, sparking curiosity and conversation about our technological future.",
-    url: "https://agimoment.com/about",
-    type: "website",
-  },
-};
 
 export default function AboutPage({
   params,
