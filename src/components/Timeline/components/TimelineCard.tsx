@@ -1,8 +1,10 @@
 import type { TimelineCardProps } from "../types";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { memo, useRef } from "react";
+import AttentionScene from "../scenes/AttentionScene";
 import ChatScene from "../scenes/ChatScene";
 import ChessScene from "../scenes/ChessScene";
+import DartmouthScene from "../scenes/DartmouthScene";
 import GoScene from "../scenes/GoScene";
 import JeopardyScene from "../scenes/JeopardyScene";
 import MomentScene from "../scenes/MomentScene";
@@ -44,6 +46,10 @@ const TimelineCard = memo(({
         return <NetworkScene networkState={milestone.scene.config} />;
       case "moment":
         return <MomentScene quote={milestone.scene.quote} />;
+      case "dartmouth":
+        return <DartmouthScene quote={milestone.scene.quote} />;
+      case "attention":
+        return <AttentionScene quote={milestone.scene.quote} />;
       default:
         return null;
     }

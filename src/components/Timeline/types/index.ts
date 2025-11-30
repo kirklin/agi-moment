@@ -12,7 +12,7 @@ export interface BaseScene {
   type: SceneType;
 }
 
-export type SceneType = "typewriter" | "chess" | "jeopardy" | "go" | "chat" | "network" | "moment";
+export type SceneType = "typewriter" | "chess" | "jeopardy" | "go" | "chat" | "network" | "moment" | "dartmouth" | "attention";
 
 // 对话场景
 export interface TuringTestSceneData extends BaseScene {
@@ -76,6 +76,18 @@ export interface MomentSceneData extends BaseScene {
   quote: string;
 }
 
+// 达特茅斯会议场景
+export interface DartmouthSceneData extends BaseScene {
+  type: "dartmouth";
+  quote: string;
+}
+
+// Attention场景
+export interface AttentionSceneData extends BaseScene {
+  type: "attention";
+  quote: string;
+}
+
 // 场景联合类型
 export type Scene =
   | TuringTestSceneData
@@ -84,7 +96,9 @@ export type Scene =
   | GoSceneData
   | ChatSceneData
   | NetworkSceneData
-  | MomentSceneData;
+  | MomentSceneData
+  | DartmouthSceneData
+  | AttentionSceneData;
 
 // 完整里程碑类型
 export interface Milestone extends BaseMilestone {
@@ -117,6 +131,14 @@ export interface NetworkSceneProps {
 }
 
 export interface MomentSceneProps {
+  quote: string;
+}
+
+export interface DartmouthSceneProps {
+  quote: string;
+}
+
+export interface AttentionSceneProps {
   quote: string;
 }
 
