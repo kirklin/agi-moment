@@ -89,16 +89,16 @@ export interface AttentionSceneData extends BaseScene {
 }
 
 // 场景联合类型
-export type Scene =
-  | TuringTestSceneData
-  | ChessSceneData
-  | JeopardySceneData
-  | GoSceneData
-  | ChatSceneData
-  | NetworkSceneData
-  | MomentSceneData
-  | DartmouthSceneData
-  | AttentionSceneData;
+export type Scene
+  = | TuringTestSceneData
+    | ChessSceneData
+    | JeopardySceneData
+    | GoSceneData
+    | ChatSceneData
+    | NetworkSceneData
+    | MomentSceneData
+    | DartmouthSceneData
+    | AttentionSceneData;
 
 // 完整里程碑类型
 export interface Milestone extends BaseMilestone {

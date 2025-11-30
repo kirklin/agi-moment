@@ -4,7 +4,10 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 
 export default kirklin({
   react: true,
-  typescript: true,
+  nextjs: true,
+  typescript: {
+    erasableOnly: true,
+  },
   formatters: true,
 },
 // --- Next.js Specific Rules ---
