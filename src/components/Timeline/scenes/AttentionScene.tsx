@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { memo, useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 
-const AttentionScene = memo(({ quote }: AttentionSceneProps) => {
+const AttentionScene = memo(({ quote: _quote }: AttentionSceneProps) => {
   const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [wordPositions, setWordPositions] = useState<Record<number, { x: number; y: number; width: number; height: number }>>({});
@@ -37,7 +37,7 @@ const AttentionScene = memo(({ quote }: AttentionSceneProps) => {
     10: 0.6, // tired
   };
 
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [_hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // Update positions on resize and mount
   useEffect(() => {
@@ -61,6 +61,7 @@ const AttentionScene = memo(({ quote }: AttentionSceneProps) => {
           };
         }
       });
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
       setWordPositions(newPositions);
     };
 
@@ -73,6 +74,7 @@ const AttentionScene = memo(({ quote }: AttentionSceneProps) => {
       window.removeEventListener("resize", updatePositions);
       clearTimeout(timeout);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible]);
 
   return (
@@ -119,6 +121,7 @@ const AttentionScene = memo(({ quote }: AttentionSceneProps) => {
 
           {/* Words */}
           {sentence.map((word, i) => (
+            // eslint-disable-next-line react/no-array-index-key
             <div key={i} className="relative group z-10">
               <motion.div
                 id={`word-${word.id}`}

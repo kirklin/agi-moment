@@ -1,6 +1,6 @@
 import type { JeopardySceneProps } from "../types";
 import { motion } from "framer-motion";
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 import { useVisibilityTimer } from "~/hooks/useVisibilityTimer";
 
@@ -38,13 +38,6 @@ const JeopardyScene = memo(({ questions: _questions }: JeopardySceneProps) => {
   ];
 
   const currentQuestion = historicalQuestions[activeQuestion];
-
-  // 重置状态
-  useEffect(() => {
-    setStage("intro");
-    setActiveQuestion(0);
-    setShowConfidence(false);
-  }, []);
 
   // 使用自定义Hook管理场景动画
   useVisibilityTimer(() => {
@@ -174,6 +167,7 @@ const JeopardyScene = memo(({ questions: _questions }: JeopardySceneProps) => {
                   <div className="grid grid-cols-3 gap-2 mt-4">
                     {["Chicago", "Toronto", "New York"].map((city, i) => (
                       <motion.div
+                        // eslint-disable-next-line react/no-array-index-key
                         key={i}
                         className={`text-sm p-2 rounded border ${i === 0 ? "border-cyan-500 bg-cyan-900/30" : "border-blue-800/30 bg-blue-950/30"}`}
                         initial={{ opacity: 0, y: 10 }}

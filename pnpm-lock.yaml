@@ -103,7 +103,7 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0(tailwindcss@4.1.17)
       '@kirklin/eslint-config':
-        specifier: ^6.1.0
+        specifier: ^6.0.0
         version: 6.1.0(@eslint-react/eslint-plugin@2.3.9(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(@next/eslint-plugin-next@16.0.5)(@vue/compiler-sfc@3.5.13)(eslint-plugin-format@1.0.2(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-jsx-a11y@6.10.2(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-react-hooks@7.0.1(eslint@9.39.1(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.24(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.14(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.27.0)(yaml@2.8.2))
       '@next/eslint-plugin-next':
         specifier: ^16.0.5

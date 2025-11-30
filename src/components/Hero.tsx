@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "~/lib/gsap";
 import CanvasWaves from "./CanvasWaves";
 
@@ -27,7 +27,8 @@ export default function Hero() {
   const [isClient, setIsClient] = useState(false);
 
   // Initialization
-  useLayoutEffect(() => {
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
     setIsClient(true);
   }, []);
 

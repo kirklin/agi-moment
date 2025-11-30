@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { memo } from "react";
 import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 
-const DartmouthScene = memo(({ quote }: DartmouthSceneProps) => {
+const DartmouthScene = memo(({ quote: _quote }: DartmouthSceneProps) => {
   const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
 
   const proposalText = [
@@ -49,6 +49,7 @@ const DartmouthScene = memo(({ quote }: DartmouthSceneProps) => {
             </motion.div>
             {proposalText.slice(0, 3).map((line, i) => (
               <motion.h3
+                // eslint-disable-next-line react/no-array-index-key
                 key={i}
                 className="text-xl md:text-2xl font-bold text-white/90 tracking-wide"
                 initial={{ opacity: 0, y: 10 }}
@@ -64,6 +65,7 @@ const DartmouthScene = memo(({ quote }: DartmouthSceneProps) => {
           <div className="space-y-2 text-lg md:text-xl leading-relaxed text-white/70">
             {proposalText.slice(4).map((line, i) => (
               <motion.p
+                // eslint-disable-next-line react/no-array-index-key
                 key={i}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isVisible ? 1 : 0 }}
@@ -73,6 +75,7 @@ const DartmouthScene = memo(({ quote }: DartmouthSceneProps) => {
                   const isHighlight = ["learning", "intelligence", "simulate"].some(k => word.toLowerCase().includes(k));
                   return (
                     <span
+                      // eslint-disable-next-line react/no-array-index-key
                       key={j}
                       className={isHighlight ? "text-cyan-400 font-bold drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" : ""}
                     >

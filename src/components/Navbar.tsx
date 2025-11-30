@@ -106,6 +106,7 @@ export default function Navbar() {
 
         {/* Mobile menu button */}
         <button
+          type="button"
           className="relative z-50 md:hidden"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"

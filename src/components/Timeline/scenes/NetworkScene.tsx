@@ -9,12 +9,6 @@ const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
   const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 重置动画状态
-  useEffect(() => {
-    setStep(0);
-    setDirection("forward");
-  }, []);
-
   // 根据可见性控制动画
   useEffect(() => {
     // 清除现有的定时器
@@ -85,6 +79,7 @@ const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
           <div className="relative w-[600px] h-[400px]">
             {networkState.layers.map((neurons, layerIndex) => (
               <div
+                // eslint-disable-next-line react/no-array-index-key
                 key={layerIndex}
                 className="absolute top-0 bottom-0"
                 style={{
@@ -96,6 +91,7 @@ const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
                   const { x: _unused2, y } = getNeuronPosition(layerIndex, neuronIndex);
                   return (
                     <motion.div
+                      // eslint-disable-next-line react/no-array-index-key
                       key={neuronIndex}
                       className="absolute size-8 rounded-full bg-cyan-500/30 border border-cyan-500/50"
                       style={{
@@ -124,6 +120,7 @@ const NetworkScene = memo(({ networkState }: NetworkSceneProps) => {
 
                             return (
                               <motion.div
+                                // eslint-disable-next-line react/no-array-index-key
                                 key={targetIndex}
                                 className="absolute h-px bg-cyan-500/30"
                                 suppressHydrationWarning={true}

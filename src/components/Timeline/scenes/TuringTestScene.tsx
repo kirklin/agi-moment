@@ -9,11 +9,6 @@ const TuringTestScene = memo(({ dialogue }: TuringTestSceneProps) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const currentMessage = dialogue[currentDialogueIndex];
 
-  // 重置对话索引
-  useEffect(() => {
-    setCurrentDialogueIndex(0);
-  }, []);
-
   const [text] = useTypewriter({
     words: [currentMessage.text],
     loop: 1,
@@ -47,6 +42,7 @@ const TuringTestScene = memo(({ dialogue }: TuringTestSceneProps) => {
   return (
     <div ref={sceneRef} className="p-8 space-y-4">
       {dialogue.slice(0, currentDialogueIndex).map((msg, idx) => (
+        // eslint-disable-next-line react/no-array-index-key
         <div key={idx} className={msg.speaker === "human" ? "text-right" : "text-left"}>
           <span className="inline-block bg-white/10 px-4 py-2 rounded">
             {msg.text}

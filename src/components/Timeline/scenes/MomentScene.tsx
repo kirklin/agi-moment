@@ -20,12 +20,6 @@ const MomentScene = memo(({ quote }: MomentSceneProps) => {
   // State for particle properties
   const [particleProps, setParticleProps] = useState<ParticleProps[]>([]);
 
-  // Reset state
-  useEffect(() => {
-    setShowQuote(false);
-    setShowAuthor(false);
-  }, []);
-
   // Generate particle properties only on the client-side after mount
   useEffect(() => {
     const generateParticleProps = () => {
@@ -37,6 +31,7 @@ const MomentScene = memo(({ quote }: MomentSceneProps) => {
         delay: Math.random() * 5,
       }));
     };
+    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect, react-hooks/set-state-in-effect
     setParticleProps(generateParticleProps());
   }, []); // Empty dependency array ensures this runs only once on client mount
 

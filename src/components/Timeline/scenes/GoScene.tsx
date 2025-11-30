@@ -1,6 +1,6 @@
 import type { GoSceneProps } from "../types";
 import { motion } from "framer-motion";
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 import { useVisibilityTimer } from "~/hooks/useVisibilityTimer";
 
@@ -49,13 +49,6 @@ const GoScene = memo(({ gameState }: GoSceneProps) => {
     return { row, col };
   };
 
-  // Reset board
-  useEffect(() => {
-    setCurrentMoveIndex(0);
-    setBoard(Array.from({ length: 19 }, () => Array.from({ length: 19 }, () => "")));
-    setShowMove37(false);
-  }, []);
-
   // Play moves
   useVisibilityTimer(() => {
     if (currentMoveIndex < gameState.moves.length) {
@@ -92,6 +85,7 @@ const GoScene = memo(({ gameState }: GoSceneProps) => {
             {/* Grid */}
             <div className="absolute inset-4 grid grid-cols-18 grid-rows-18 border-t border-l border-black">
               {Array.from({ length: 324 }).map((_, i) => (
+                // eslint-disable-next-line react/no-array-index-key
                 <div key={i} className="border-b border-r border-black" />
               ))}
             </div>
@@ -114,6 +108,7 @@ const GoScene = memo(({ gameState }: GoSceneProps) => {
             <div className="absolute inset-4 grid grid-cols-19 grid-rows-19">
               {board.map((row, r) =>
                 row.map((cell, c) => (
+                  // eslint-disable-next-line react/no-array-index-key
                   <div key={`${r}-${c}`} className="relative flex items-center justify-center">
                     {cell && (
                       <motion.div

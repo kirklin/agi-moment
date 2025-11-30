@@ -31,10 +31,15 @@ const ChessScene = memo(({ gameState }: ChessSceneProps) => {
 
   // 重置棋盘状态
   useEffect(() => {
-    chess.load(gameState.position);
-    setBoardPosition(gameState.position);
-    setCurrentMoveIndex(0);
-  }, [chess, gameState.position]);
+    if (gameState.position !== boardPosition) {
+      chess.load(gameState.position);
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+      setBoardPosition(gameState.position);
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+      setCurrentMoveIndex(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameState.position]);
 
   // 使用自定义Hook管理定时器，执行棋步动画
   useVisibilityTimer(() => {
@@ -62,6 +67,7 @@ const ChessScene = memo(({ gameState }: ChessSceneProps) => {
                   for (let i = 0; i < emptySquares; i++) {
                     squares.push(
                       <div
+                        // eslint-disable-next-line react/no-array-index-key
                         key={`${rowIndex}-${colIndex}`}
                         className={`${
                           (rowIndex + colIndex) % 2 === 0
@@ -75,6 +81,7 @@ const ChessScene = memo(({ gameState }: ChessSceneProps) => {
                 } else {
                   squares.push(
                     <div
+                      // eslint-disable-next-line react/no-array-index-key
                       key={`${rowIndex}-${colIndex}`}
                       className={`relative ${
                         (rowIndex + colIndex) % 2 === 0
@@ -117,6 +124,7 @@ const ChessScene = memo(({ gameState }: ChessSceneProps) => {
               {gameState.moves.map((move, idx) => {
                 if (idx % 2 === 0) {
                   return (
+                    // eslint-disable-next-line react/no-array-index-key
                     <div key={idx} className="grid grid-cols-2 gap-2">
                       <span className={idx === currentMoveIndex - 1 ? "text-cyan-400 font-bold" : "text-white/70"}>
                         {Math.floor(idx / 2) + 1}

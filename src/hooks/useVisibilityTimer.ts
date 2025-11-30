@@ -53,5 +53,6 @@ export function useVisibilityTimer(
         clearTimeout(timerRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [delay, isVisible, ...dependencies]);
 }

@@ -9,6 +9,8 @@ interface IntersectionObserverOptions {
  * 自定义Hook，用于检测元素是否在视口中
  *
  * @param options - Intersection Observer的配置选项
+ * @param options.threshold - 触发回调的可见比例
+ * @param options.rootMargin - 根元素的边距
  * @returns 包含ref和isVisible状态的对象
  *
  * @example
@@ -50,13 +52,14 @@ export function useIntersectionObserver({
       },
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const currentRef = ref.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, [rootMargin, threshold]);

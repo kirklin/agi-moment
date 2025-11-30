@@ -18,6 +18,7 @@ export default function AboutPage({
       <Script
         id="about-structured-data"
         type="application/ld+json"
+        // eslint-disable-next-line react-dom/no-dangerously-set-innerhtml
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",

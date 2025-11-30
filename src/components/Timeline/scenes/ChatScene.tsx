@@ -10,11 +10,6 @@ const ChatScene = memo(({ conversation }: ChatSceneProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { ref: sceneRef, isVisible } = useIntersectionObserver({ threshold: 0.3 });
 
-  // 重置消息索引
-  useEffect(() => {
-    setCurrentMessageIndex(0);
-  }, []);
-
   // 使用自定义Hook管理定时器，当组件可见且还有消息可显示时显示下一条消息
   useVisibilityTimer(() => {
     if (currentMessageIndex < conversation.length) {
@@ -54,6 +49,7 @@ const ChatScene = memo(({ conversation }: ChatSceneProps) => {
             >
               {conversation.slice(0, currentMessageIndex).map((message, idx) => (
                 <motion.div
+                  // eslint-disable-next-line react/no-array-index-key
                   key={idx}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -98,7 +94,7 @@ const ChatScene = memo(({ conversation }: ChatSceneProps) => {
                 <div className="flex-1 bg-white/5 rounded-lg p-3 text-white/40 border border-white/5">
                   Ask me anything...
                 </div>
-                <button className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors border border-blue-500/20">
+                <button type="button" className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors border border-blue-500/20">
                   Send
                 </button>
               </div>
